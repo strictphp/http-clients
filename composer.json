@@ -1,7 +1,7 @@
 {
     "name": "strictphp/http-cliens",
     "type": "project",
-    "description": "",
+    "description": "arious http client implementations for better developer and devops experience.",
     "keywords": ["laravel", "php", "strictphp", "http-client"],
     "license": "MIT",
     "homepage": "https://github.com/strictphp/http-clients",
