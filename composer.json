@@ -1,0 +1,42 @@
+{
+    "name": "strictphp/http-cliens",
+    "type": "project",
+    "description": "",
+    "keywords": ["laravel", "php", "strictphp", "http-client"],
+    "license": "MIT",
+    "homepage": "https://github.com/strictphp/http-clients",
+    "authors": [
+        {
+            "name": "Martin Kluska",
+            "email": "martin@kluska.cz"
+        },
+        {
+          "name": "Milan Matějček",
+          "email": "milan.matejcek@gmail.com",
+          "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+       
+    },
+    "scripts": {
+       
+    },
+    "autoload": {},
+    "autoload-dev": {},
+    "extra": {
+        "laravel": {
+            "providers": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
