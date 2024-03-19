@@ -7,7 +7,7 @@ namespace StrictPhp\HttpClients\Actions;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 
-class FindExtensionFromHeadersAction implements FindExtensionFromHeadersActionContract
+final class FindExtensionFromHeadersAction implements FindExtensionFromHeadersActionContract
 {
     public function execute(ResponseInterface $response): string
     {
@@ -19,7 +19,7 @@ class FindExtensionFromHeadersAction implements FindExtensionFromHeadersActionCo
                 str_contains($lower, 'json') => 'json',
                 str_contains($lower, 'html') => 'html',
                 str_contains($lower, 'pdf') => 'pdf',
-                default => static::more($lower),
+                default => null,
             };
             if ($extension !== null) {
                 return $extension;
@@ -29,8 +29,4 @@ class FindExtensionFromHeadersAction implements FindExtensionFromHeadersActionCo
         return 'txt';
     }
 
-    protected static function more(string $extension): ?string
-    {
-        return null;
-    }
 }
