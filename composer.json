@@ -1,7 +1,7 @@
 {
   "name": "strictphp/http-clients",
   "type": "project",
-  "description": "arious http client implementations for better developer and devops experience.",
+  "description": "Various http client implementations for better developer and devops experience.",
   "keywords": [
     "laravel",
     "php",
