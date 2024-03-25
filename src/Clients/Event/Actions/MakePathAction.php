@@ -10,14 +10,17 @@ use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 
 final class MakePathAction implements MakePathActionContract
 {
-    public function __construct(private readonly Filesystem $filesystem)
-    {
+    public function __construct(
+        private readonly string $rootDir,
+        private readonly Filesystem $filesystem,
+    ) {
     }
 
     public function execute(AbstractRequestEvent $event, string $extension = ''): string
     {
         $uri = $event->request->getUri();
         $directory = implode('/', [
+            $this->rootDir,
             $uri->getHost(),
             date('Y-m-d/H', (int) $event->start),
         ]);
@@ -28,6 +31,6 @@ final class MakePathAction implements MakePathActionContract
                 $event->id,
             ]) . ".$extension";
 
-        return $this->filesystem->get($directory) . "/$filename";
+        return "$directory/$filename";
     }
 }
