@@ -27,7 +27,7 @@ final class SaveForPhpstormRequest
 
     public function save(AbstractCompleteRequestEvent $event, ?ResponseInterface $response = null): void
     {
-        $file = new SplFileObject($this->makePathAction->execute($event, 'http'), 'w');
+        $file = new SplFileObject($this->makePathAction->execute($event, 'q.http'), 'w');
         $file->fwrite("### Duration: $event->duration" . Headers::Eol);
         $file->fwrite($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);
         foreach (Headers::toIterable($event->request->getHeaders()) as $header) {
