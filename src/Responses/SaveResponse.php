@@ -28,7 +28,7 @@ final class SaveResponse
 
     public function save(AbstractCompleteRequestEvent $event, ResponseInterface $response): void
     {
-        $path = $this->makePathAction->execute($event);
+        $path = $this->makePathAction->execute($event) . 's.';
 
         if ($this->serialized === null || $this->serialized === false) {
             $this->headersAndBody($path, $event->duration, $response);
