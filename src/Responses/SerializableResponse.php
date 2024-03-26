@@ -7,6 +7,7 @@ namespace StrictPhp\HttpClients\Responses;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Serializable;
+use StrictPhp\HttpClients\Helpers\Stream;
 use Stringable;
 
 /**
@@ -30,16 +31,13 @@ final class SerializableResponse implements Serializable, Stringable
      */
     public function __serialize(): array
     {
-        $body = $this->response->getBody();
-        $body->rewind();
-
         return [
             'class' => $this->response::class,
             'protocolVersion' => $this->response->getProtocolVersion(),
             'headers' => $this->response->getHeaders(),
             'code' => $this->response->getStatusCode(),
             'reason' => $this->response->getReasonPhrase(),
-            'body' => $body->getContents(),
+            'body' => Stream::content($this->response->getBody()),
         ];
     }
 

@@ -20,16 +20,12 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
             }
         }
 
-        $body->rewind();
-        $key = md5(serialize([
+        return md5(serialize([
             $request->getMethod(),
             $request->getProtocolVersion(),
             $headers,
-            $body->getContents(),
+            (string) $body,
             (string) $request->getUri(),
         ]));
-        $body->rewind();
-
-        return $key;
     }
 }
