@@ -11,6 +11,7 @@ use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Helpers\Headers;
+use StrictPhp\HttpClients\Helpers\Stream;
 
 /**
  * Use for event
@@ -69,11 +70,7 @@ final class SaveResponse
     {
         $file = self::createSplFileObject($path . $this->findExtensionFromHeaders->execute($response));
         $stream = $response->getBody();
-        $stream->rewind();
-        while ($stream->eof() === false) {
-            $file->fwrite($stream->read($this->bufferSize));
-        }
-        $stream->rewind();
+        Stream::fileWrite($stream, $file, $this->bufferSize);
 
         $file->fwrite(Headers::Eol);
     }
