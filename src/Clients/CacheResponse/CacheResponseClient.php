@@ -36,7 +36,7 @@ final class CacheResponseClient implements ClientInterface
             return $this->request($request);
         }
 
-        $key = $this->makeKey($request);
+        $key = $this->cacheKeyMakerAction->execute($request);
         $response = $this->saveOnly ? null : $this->restoreRequest($key);
 
         if ($response instanceof ResponseInterface === false) {
@@ -52,24 +52,6 @@ final class CacheResponseClient implements ClientInterface
         return $this->client->sendRequest($request);
     }
 
-    private function makeKey(RequestInterface $request): string
-    {
-        $headers = $request->getHeaders();
-        $body = $request->getBody();
-        $uri = $request->getUri();
-
-        $this->cacheKeyMakerAction->execute($headers, $body, $uri);
-
-        $data = [
-            $request->getMethod(),
-            $request->getProtocolVersion(),
-            $headers,
-            $body->getContents(),
-            (string) $uri,
-        ];
-
-        return md5(serialize($data));
-    }
 
     private function restoreRequest(string $key): ?ResponseInterface
     {

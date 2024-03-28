@@ -10,6 +10,7 @@ use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\BeforeRequestEvent;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Helpers\Headers;
+use StrictPhp\HttpClients\Helpers\Stream;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 
 /**
@@ -27,7 +28,7 @@ final class SaveForPhpstormRequest
 
     public function save(AbstractCompleteRequestEvent $event, ?ResponseInterface $response = null): void
     {
-        $file = new SplFileObject($this->makePathAction->execute($event, 'http'), 'w');
+        $file = new SplFileObject($this->makePathAction->execute($event, 'q.http'), 'w');
         $file->fwrite("### Duration: $event->duration" . Headers::Eol);
         $file->fwrite($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);
         foreach (Headers::toIterable($event->request->getHeaders()) as $header) {
@@ -36,11 +37,7 @@ final class SaveForPhpstormRequest
         $file->fwrite(Headers::Eol);
 
         $stream = $event->request->getBody();
-        $stream->rewind();
-        while ($stream->eof() === false) {
-            $file->fwrite($stream->read($this->bufferSize));
-        }
-        $stream->rewind();
+        Stream::fileWrite($stream, $file, $this->bufferSize);
 
         if ($response !== null) {
             $this->saveResponse->save($event, $response);
