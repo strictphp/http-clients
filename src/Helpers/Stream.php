@@ -3,20 +3,20 @@
 namespace StrictPhp\HttpClients\Helpers;
 
 use Psr\Http\Message\StreamInterface;
-use SplFileObject;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
 
 final class Stream
 {
-    public static function fileWrite(StreamInterface $stream, SplFileObject $splFileObject, int $buffer): void
+    public static function fileWrite(StreamInterface $stream, FileContract $file, int $buffer): void
     {
         if ($stream->isSeekable()) {
             $stream->rewind();
             while ($stream->eof() === false) {
-                $splFileObject->fwrite($stream->read($buffer));
+                $file->write($stream->read($buffer));
             }
             $stream->rewind();
         } else {
-            $splFileObject->fwrite((string) $stream);
+            $file->write((string) $stream);
         }
     }
 
