@@ -8,40 +8,33 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
-use StrictPhp\HttpClients\Clients\CacheResponse\Actions\CacheKeyMakerAction;
-use StrictPhp\HttpClients\Contracts\CacheKeyMakerActionContract;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 use StrictPhp\HttpClients\Responses\SerializableResponse;
+use StrictPhp\HttpClients\Services\ConfigService;
 
 final class CacheResponseClient implements ClientInterface
 {
-    private readonly CacheKeyMakerActionContract $cacheKeyMakerAction;
-
-    /**
-     * @param int|null $ttl - 0 disable saving, $saveOnly does not work
-     */
     public function __construct(
         private readonly ClientInterface $client,
         private readonly CacheInterface $cache,
-        CacheKeyMakerActionContract $cacheKeyMakerAction = null,
-        private readonly bool $saveOnly = false,
-        private readonly ?int $ttl = null,
+        private readonly ConfigService $configs,
     ) {
-        $this->cacheKeyMakerAction = $cacheKeyMakerAction ?? new CacheKeyMakerAction();
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        if ($this->ttl !== null && $this->ttl < 1) {
+        $config = $this->configs->get(Config::class, $request->getUri()->getHost());
+
+        if ($config->ttl !== null && $config->ttl < 1) {
             return $this->request($request);
         }
 
-        $key = $this->cacheKeyMakerAction->execute($request);
-        $response = $this->saveOnly ? null : $this->restoreRequest($key);
+        $key = $config->getCacheKeyMakerAction()->execute($request);
+        $response = $config->saveOnly ? null : $this->restoreRequest($key);
 
         if ($response instanceof ResponseInterface === false) {
             $response = $this->request($request);
-            $this->storeRequest($key, $response);
+            $this->storeRequest($key, $response, $config->ttl);
         }
 
         return $response;
@@ -64,8 +57,8 @@ final class CacheResponseClient implements ClientInterface
         return $response?->response;
     }
 
-    private function storeRequest(string $key, ResponseInterface $response): void
+    private function storeRequest(string $key, ResponseInterface $response, ?int $ttl): void
     {
-        $this->cache->set($key, new SerializableResponse($response), $this->ttl);
+        $this->cache->set($key, new SerializableResponse($response), $ttl);
     }
 }

@@ -50,13 +50,6 @@ final class SaveResponse
         $this->body($fileInfo, $response);
     }
 
-    public function serialized(FileInfoEntity $fileInfo, ResponseInterface $response): void
-    {
-        $file = $this->fileFactory->create($fileInfo, 'shttp');
-
-        $file->write((string) (new SerializableResponse($response)));
-    }
-
     private function headers(FileInfoEntity $fileInfo, float $duration, ResponseInterface $response): void
     {
         $file = $this->fileFactory->create($fileInfo, 'headers');
@@ -75,5 +68,12 @@ final class SaveResponse
         Stream::fileWrite($stream, $file, $this->bufferSize);
 
         $file->write(Headers::Eol);
+    }
+
+    public function serialized(FileInfoEntity $fileInfo, ResponseInterface $response): void
+    {
+        $file = $this->fileFactory->create($fileInfo, 'shttp');
+
+        $file->write((string) (new SerializableResponse($response)));
     }
 }
