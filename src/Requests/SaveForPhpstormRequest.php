@@ -27,7 +27,7 @@ final class SaveForPhpstormRequest
     ) {
     }
 
-    public function save(AbstractCompleteRequestEvent $event, ?ResponseInterface $response = null): void
+    public function save(AbstractCompleteRequestEvent $event, ?ResponseInterface $response = null, ?bool $serialized = null): void
     {
         $file = $this->fileFactory->create($this->makePathAction->execute($event, 'q.http'));
         $file->write("### Duration: $event->duration" . Headers::Eol);
@@ -41,7 +41,7 @@ final class SaveForPhpstormRequest
         Stream::fileWrite($stream, $file, $this->bufferSize);
 
         if ($response !== null) {
-            $this->saveResponse->save($event, $response);
+            $this->saveResponse->save($event, $response, $serialized);
         }
     }
 }
