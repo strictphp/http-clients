@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace StrictPhp\HttpClients\Responses;
 
 use Psr\Http\Message\ResponseInterface;
-use SplFileObject;
+use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Helpers\Headers;
 use StrictPhp\HttpClients\Helpers\Stream;
 
@@ -20,6 +21,7 @@ use StrictPhp\HttpClients\Helpers\Stream;
 final class SaveResponse
 {
     public function __construct(
+        private readonly FileFactoryContract $fileFactory,
         private readonly MakePathActionContract $makePathAction,
         private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
         private readonly int $bufferSize = 8192,
@@ -27,56 +29,51 @@ final class SaveResponse
     ) {
     }
 
-    public function save(AbstractCompleteRequestEvent $event, ResponseInterface $response): void
+    public function save(AbstractCompleteRequestEvent $event, ResponseInterface $response, ?bool $serialized = null): void
     {
-        $path = $this->makePathAction->execute($event) . 's.';
+        $serialized ??= $this->serialized;
 
-        if ($this->serialized === null || $this->serialized === false) {
-            $this->headersAndBody($path, $event->duration, $response);
+        $fileInfo = $this->makePathAction->execute($event, 's.');
+
+        if ($serialized === null || $serialized === false) {
+            $this->headersAndBody($fileInfo, $event->duration, $response);
         }
 
-        if ($this->serialized === null || $this->serialized === true) {
-            $this->serialized($path, $response);
+        if ($serialized === null || $serialized === true) {
+            $this->serialized($fileInfo, $response);
         }
     }
 
-    public function headersAndBody(string $path, float $duration, ResponseInterface $response): void
+    public function headersAndBody(FileInfoEntity $fileInfo, float $duration, ResponseInterface $response): void
     {
-        $this->headers($path, $duration, $response);
-        $this->body($path, $response);
+        $this->headers($fileInfo, $duration, $response);
+        $this->body($fileInfo, $response);
     }
 
-
-    public function serialized(string $path, ResponseInterface $response): void
+    public function serialized(FileInfoEntity $fileInfo, ResponseInterface $response): void
     {
-        $file = self::createSplFileObject($path . 'shttp');
+        $file = $this->fileFactory->create($fileInfo, 'shttp');
 
-        $file->fwrite((string) (new SerializableResponse($response)));
+        $file->write((string) (new SerializableResponse($response)));
     }
 
-    private function headers(string $path, float $duration, ResponseInterface $response): void
+    private function headers(FileInfoEntity $fileInfo, float $duration, ResponseInterface $response): void
     {
-        $file = self::createSplFileObject($path . 'headers');
-        $file->fwrite("### Duration: $duration, code: " . $response->getStatusCode() . Headers::Eol);
+        $file = $this->fileFactory->create($fileInfo, 'headers');
+        $file->write("### Duration: $duration, code: " . $response->getStatusCode() . Headers::Eol);
         foreach (Headers::toIterable($response->getHeaders()) as $header) {
-            $file->fwrite($header . Headers::Eol);
+            $file->write($header . Headers::Eol);
         }
 
-        $file->fwrite(Headers::Eol);
+        $file->write(Headers::Eol);
     }
 
-
-    private function body(string $path, ResponseInterface $response): void
+    private function body(FileInfoEntity $fileInfo, ResponseInterface $response): void
     {
-        $file = self::createSplFileObject($path . $this->findExtensionFromHeaders->execute($response));
+        $file = $this->fileFactory->create($fileInfo, $this->findExtensionFromHeaders->execute($response));
         $stream = $response->getBody();
         Stream::fileWrite($stream, $file, $this->bufferSize);
 
-        $file->fwrite(Headers::Eol);
-    }
-
-    private static function createSplFileObject(string $path): SplFileObject
-    {
-        return new SplFileObject($path, 'w');
+        $file->write(Headers::Eol);
     }
 }
