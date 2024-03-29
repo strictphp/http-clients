@@ -12,7 +12,7 @@ final class Config implements ConfigContract
     ) {
     }
 
-    public function initByDefault($object): void
+    public function initFromDefaultConfig($object): void
     {
         // intentionally empty
     }

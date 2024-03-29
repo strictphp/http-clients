@@ -8,9 +8,9 @@ use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\BeforeRequestEvent;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
+use StrictPhp\HttpClients\Contracts\StreamActionContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Helpers\Headers;
-use StrictPhp\HttpClients\Helpers\Stream;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 
 /**
@@ -23,6 +23,7 @@ final class SaveForPhpstormRequest
         private readonly FileFactoryContract $fileFactory,
         private readonly MakePathActionContract $makePathAction,
         private readonly SaveResponse $saveResponse,
+        private readonly StreamActionContract $streamAction,
         private readonly int $bufferSize = 8192
     ) {
     }
@@ -37,8 +38,7 @@ final class SaveForPhpstormRequest
         }
         $file->write(Headers::Eol);
 
-        $stream = $event->request->getBody();
-        Stream::fileWrite($stream, $file, $this->bufferSize);
+        $this->streamAction->execute($event->request->getBody(), $file, $this->bufferSize);
 
         if ($response !== null) {
             $this->saveResponse->save($event, $response, $serialized);

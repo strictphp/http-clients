@@ -14,11 +14,11 @@ final class Config implements ConfigContract
     public function __construct(
         public ?int $ttl = 0,
         public bool $saveOnly = false,
-        public ?CacheKeyMakerActionContract $cacheKeyMakerAction = null,
+        private ?CacheKeyMakerActionContract $cacheKeyMakerAction = null,
     ) {
     }
 
-    public function initByDefault(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigContract $object): void
     {
         $this->cacheKeyMakerAction = $object->getCacheKeyMakerAction();
     }

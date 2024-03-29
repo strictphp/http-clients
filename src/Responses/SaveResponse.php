@@ -10,9 +10,9 @@ use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
+use StrictPhp\HttpClients\Contracts\StreamActionContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Helpers\Headers;
-use StrictPhp\HttpClients\Helpers\Stream;
 
 /**
  * Use for event
@@ -24,6 +24,7 @@ final class SaveResponse
         private readonly FileFactoryContract $fileFactory,
         private readonly MakePathActionContract $makePathAction,
         private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
+        private readonly StreamActionContract $streamAction,
         private readonly int $bufferSize = 8192,
         private readonly ?bool $serialized = null,
     ) {
@@ -64,8 +65,7 @@ final class SaveResponse
     private function body(FileInfoEntity $fileInfo, ResponseInterface $response): void
     {
         $file = $this->fileFactory->create($fileInfo, $this->findExtensionFromHeaders->execute($response));
-        $stream = $response->getBody();
-        Stream::fileWrite($stream, $file, $this->bufferSize);
+        $this->streamAction->execute($response->getBody(), $file, $this->bufferSize);
 
         $file->write(Headers::Eol);
     }

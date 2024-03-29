@@ -20,7 +20,7 @@ final class ConfigService
 
     public function add(string $host, ConfigContract $config): void
     {
-        $config->initByDefault($this->getDefault($config::class));
+        $config->initFromDefaultConfig($this->getDefault($config::class));
         $this->configs[$config::class][$host] = $config;
     }
 
