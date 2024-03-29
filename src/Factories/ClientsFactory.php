@@ -6,7 +6,6 @@ namespace StrictPhp\HttpClients\Factories;
 
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
-use StrictPhp\HttpClients\Helpers\ClientsChain;
 
 final class ClientsFactory
 {
@@ -24,6 +23,11 @@ final class ClientsFactory
      */
     public function create(iterable $factories = null): ClientInterface
     {
-        return ClientsChain::build($this->client, $factories ?? $this->factories);
+        $client = $this->client;
+        foreach ($factories ?? $this->factories as $factory) {
+            $client = $factory->create($client);
+        }
+
+        return $client;
     }
 }

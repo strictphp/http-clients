@@ -8,6 +8,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Helpers\Time;
+use StrictPhp\HttpClients\Services\ConfigService;
 
 final class SleepClient implements ClientInterface
 {
@@ -18,25 +19,29 @@ final class SleepClient implements ClientInterface
 
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly int $from = 500,
-        private readonly int $to = 1000,
+        private readonly ConfigService $configService,
+
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $host = $request->getUri()->getHost();
-        if (isset($this->timeout[$host])) {
+        $config = $this->configService->get(Config::class, $host);
+
+        if ($config->to > 0 && isset($this->timeout[$host])) {
             $diff = Time::micro() - $this->timeout[$host];
             if ($diff < 1) {
-                Time::sleep(random_int($this->from, $this->to));
+                Time::sleep(random_int($config->from, $config->to));
             }
         }
 
         try {
             $response = $this->client->sendRequest($request);
         } finally {
-            $this->timeout[$host] = Time::micro();
+            if ($config->to > 0) {
+                $this->timeout[$host] = Time::micro();
+            }
         }
 
         return $response;

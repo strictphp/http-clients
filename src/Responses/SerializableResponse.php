@@ -21,26 +21,6 @@ final class SerializableResponse implements Serializable, Stringable
     ) {
     }
 
-    public function serialize(): ?string
-    {
-        return serialize($this->__serialize());
-    }
-
-    /**
-     * @return SerializeType
-     */
-    public function __serialize(): array
-    {
-        return [
-            'class' => $this->response::class,
-            'protocolVersion' => $this->response->getProtocolVersion(),
-            'headers' => $this->response->getHeaders(),
-            'code' => $this->response->getStatusCode(),
-            'reason' => $this->response->getReasonPhrase(),
-            'body' => Stream::content($this->response->getBody()),
-        ];
-    }
-
     public function unserialize(string $data): void
     {
         /** @var SerializeType $responseData */
@@ -68,5 +48,25 @@ final class SerializableResponse implements Serializable, Stringable
     public function __toString(): string
     {
         return (string) $this->serialize();
+    }
+
+    public function serialize(): ?string
+    {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * @return SerializeType
+     */
+    public function __serialize(): array
+    {
+        return [
+            'class' => $this->response::class,
+            'protocolVersion' => $this->response->getProtocolVersion(),
+            'headers' => $this->response->getHeaders(),
+            'code' => $this->response->getStatusCode(),
+            'reason' => $this->response->getReasonPhrase(),
+            'body' => Stream::content($this->response->getBody()),
+        ];
     }
 }
