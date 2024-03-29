@@ -26,7 +26,7 @@ final class FactoryToServiceIterator implements IteratorAggregate
      */
     public function getIterator(): Generator
     {
-        foreach ($this->factories as $factoryStr) {
+        foreach (new ReverseIterator($this->factories) as $factoryStr) {
             $factory = $this->container->get($factoryStr);
             assert($factory instanceof ClientFactoryContract);
 
