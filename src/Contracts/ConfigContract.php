@@ -10,5 +10,5 @@ interface ConfigContract
     /**
      * @param static $object
      */
-    public function initByDefault(ConfigContract $object): void;
+    public function initFromDefaultConfig(ConfigContract $object): void;
 }
