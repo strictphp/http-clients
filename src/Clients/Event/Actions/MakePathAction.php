@@ -14,8 +14,9 @@ final class MakePathAction implements MakePathActionContract
     {
         $uri = $event->request->getUri();
         $directory = implode('/', [
+            date('Y-m-d', (int) $event->start),
             $uri->getHost(),
-            date('Y-m-d/H', (int) $event->start),
+            date('H', (int) $event->start),
         ]);
 
         $filename = implode('-', [
