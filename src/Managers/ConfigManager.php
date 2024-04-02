@@ -48,7 +48,7 @@ final class ConfigManager
      * @template T of ConfigContract
      * @param class-string<T> $class
      *
-     * @return ConfigContract
+     * @return T
      */
     public function get(string $class, string $host): ConfigContract
     {
