@@ -9,15 +9,15 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Responses\SerializableResponse;
-use StrictPhp\HttpClients\Services\ConfigService;
 
 final class CacheResponseClient implements ClientInterface
 {
     public function __construct(
         private readonly ClientInterface $client,
         private readonly CacheInterface $cache,
-        private readonly ConfigService $configService,
+        private readonly ConfigManager $configService,
     ) {
     }
 

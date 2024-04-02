@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StrictPhp\HttpClients\Services;
+namespace StrictPhp\HttpClients\Managers;
 
 use StrictPhp\HttpClients\Contracts\ConfigContract;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 
-final class ConfigService
+final class ConfigManager
 {
     /**
      * @var array<class-string<ConfigContract>, array<string, ConfigContract>>
@@ -48,7 +48,7 @@ final class ConfigService
      * @template T of ConfigContract
      * @param class-string<T> $class
      *
-     * @return T
+     * @return ConfigContract
      */
     public function get(string $class, string $host): ConfigContract
     {

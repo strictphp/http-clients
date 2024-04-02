@@ -6,11 +6,11 @@ namespace StrictPhp\HttpClients\Clients\Sleep;
 
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
-use StrictPhp\HttpClients\Services\ConfigService;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 
 final class SleepClientFactory implements ClientFactoryContract
 {
-    public function __construct(private readonly ConfigService $configService)
+    public function __construct(private readonly ConfigManager $configService)
     {
     }
 
