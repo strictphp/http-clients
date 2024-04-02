@@ -8,7 +8,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Helpers\Time;
-use StrictPhp\HttpClients\Services\ConfigService;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 
 final class SleepClient implements ClientInterface
 {
@@ -19,7 +19,7 @@ final class SleepClient implements ClientInterface
 
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly ConfigService $configService,
+        private readonly ConfigManager $configService,
 
     ) {
     }
