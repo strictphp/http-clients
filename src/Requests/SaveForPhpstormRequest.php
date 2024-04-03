@@ -6,7 +6,8 @@ namespace StrictPhp\HttpClients\Requests;
 
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
-use StrictPhp\HttpClients\Clients\Event\Events\BeforeRequestEvent;
+use StrictPhp\HttpClients\Clients\Event\Events\FailedRequestEvent;
+use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
@@ -15,7 +16,8 @@ use StrictPhp\HttpClients\Responses\SaveResponse;
 
 /**
  * Use for event
- * @see BeforeRequestEvent
+ * @see FailedRequestEvent
+ * @see SuccessRequestEvent
  */
 final class SaveForPhpstormRequest
 {
