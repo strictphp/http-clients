@@ -10,12 +10,12 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 
 final class SleepClientFactory implements ClientFactoryContract
 {
-    public function __construct(private readonly ConfigManager $configService)
+    public function __construct(private readonly ConfigManager $configManager)
     {
     }
 
     public function create(ClientInterface $client): ClientInterface
     {
-        return new SleepClient($client, $this->configService);
+        return new SleepClient($client, $this->configManager);
     }
 }

@@ -19,7 +19,7 @@ final class SleepClient implements ClientInterface
 
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly ConfigManager $configService,
+        private readonly ConfigManager $configManager,
 
     ) {
     }
@@ -27,7 +27,7 @@ final class SleepClient implements ClientInterface
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $host = $request->getUri()->getHost();
-        $config = $this->configService->get(Config::class, $host);
+        $config = $this->configManager->get(Config::class, $host);
 
         if ($config->to > 0 && isset($this->timeout[$host])) {
             $diff = Time::micro() - $this->timeout[$host];

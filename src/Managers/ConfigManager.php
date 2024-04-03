@@ -29,8 +29,8 @@ final class ConfigManager
      */
     private function getDefault(string $class): ConfigContract
     {
-        if (array_key_exists($class, $this->defaults) === false) {
-            $this->addDefault(new $class());
+        if ($this->existsDefault($class) === false) {
+            $this->addDefaultForce(new $class());
         }
 
         return $this->defaults[$class];
@@ -38,10 +38,10 @@ final class ConfigManager
 
     public function addDefault(ConfigContract $config): void
     {
-        if (array_key_exists($config::class, $this->defaults)) {
+        if ($this->existsDefault($config::class)) {
             throw new InvalidStateException(sprintf('Default config for "%s" already exists.', $config::class));
         }
-        $this->defaults[$config::class] = $config;
+        $this->addDefaultForce($config);
     }
 
     /**
@@ -56,5 +56,18 @@ final class ConfigManager
         assert(is_a($config, $class));
 
         return $config;
+    }
+
+    private function addDefaultForce(ConfigContract $config): void
+    {
+        $this->defaults[$config::class] = $config;
+    }
+
+    /**
+     * @param class-string<ConfigContract> $class
+     */
+    private function existsDefault(string $class): bool
+    {
+        return array_key_exists($class, $this->defaults);
     }
 }

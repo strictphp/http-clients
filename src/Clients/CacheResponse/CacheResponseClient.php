@@ -17,13 +17,13 @@ final class CacheResponseClient implements ClientInterface
     public function __construct(
         private readonly ClientInterface $client,
         private readonly CacheInterface $cache,
-        private readonly ConfigManager $configService,
+        private readonly ConfigManager $configManager,
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $config = $this->configService->get(Config::class, $request->getUri()->getHost());
+        $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
 
         if ($config->ttl !== null && $config->ttl < 1) {
             return $this->request($request);
