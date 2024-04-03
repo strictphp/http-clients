@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Contracts;
 
 /**
- * keep constructor with default parameters
+ * parameters in constructor are not require
  */
 interface ConfigContract
 {
