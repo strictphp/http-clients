@@ -7,6 +7,8 @@ namespace StrictPhp\HttpClients\Contracts;
  */
 interface ConfigContract
 {
+    public function __construct();
+
     /**
      * @param static $object
      */
