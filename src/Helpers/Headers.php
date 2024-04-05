@@ -17,10 +17,12 @@ final class Headers
      */
     public static function toIterable(array $headers): Generator
     {
+        $replace = 10;
+        $suffix = str_repeat('.', $replace);
         foreach ($headers as $name => $values) {
             $value = implode(', ', $values);
             if (str_contains(strtolower($name), 'bearer')) {
-                $value = substr($value, 0, -10);
+                $value = substr($value, 0, -1 * $replace) . $suffix;
             }
 
             yield "$name: $value";
