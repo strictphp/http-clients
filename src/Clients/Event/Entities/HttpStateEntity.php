@@ -26,9 +26,8 @@ final class HttpStateEntity
 
     public function __construct(public readonly RequestInterface $request)
     {
-        $micro = Time::micro();
-        $this->id = md5($micro . $this->request->getUri());
-        $this->start = $micro;
+        $this->start = Time::micro();
+        $this->id = md5($this->start . $this->request->getUri());
     }
 
     public function finish(): self
