@@ -6,6 +6,7 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 
 - Uses PSR container for dependency injection.
 - **[CacheResponseClient](#cacheresponseclient-file)**: Utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests.
+- **[CustomizeRequestClient](#customizerequestclient-file)**: You can modify the request before sending it.
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
 - Save your requests as PHPStorm `.http` file and corresponding response as a file.
@@ -108,6 +109,21 @@ The #1 parameter in constructor can be:
 - a path on file with plain text, this is used like body only
 
 You need to set up container dependency to add the content you need.
+
+### CustomizeRequestClient ([file](src/Clients/CustomizeRequest/CustomizeRequestClient.php))
+
+Define modification for request per host.
+
+```php
+use Psr\Http\Message\RequestInterface;
+use StrictPhp\HttpClients\Clients\CustomizeRequest\Config;
+use StrictPhp\HttpClients\Managers\ConfigManager;
+
+/** @var ConfigManager $configManager */
+$configManager->add('www.example.com', new Config(function(RequestInterface $request): RequestInterface {
+    return $request->withHeader('uuid', generate_uuid());
+}));
+```
 
 ### EventClient ([file](src/Clients/Event/EventClient.php))
 
