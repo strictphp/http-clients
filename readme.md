@@ -26,46 +26,6 @@ The ClientsFactory simplifies the creation of clients by allowing you to define 
 
 Example:
 ```php
-use StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseClientFactory;
-use StrictPhp\HttpClients\Clients\Event\EventClientFactory;
-use StrictPhp\HttpClients\Clients\Sleep\SleepClientFactory;
-use Strictphp\HttpClients\Factories\ClientsFactory;
-use Strictphp\HttpClients\Iterators\FactoryToServiceIterator;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Client\ClientInterface;
-
-// Assuming $client is the main client like GuzzleHttp\Client
-/** @var ClientInterface $client */
-/** @var ContainerInterface $container */
-
-$clients = [
-    EventClientFactory::class,
-    SleepClientFactory::class,
-    CacheResponseClientFactory::class,
-    // Other client factories...
-];
-
-$clientFactory = new ClientsFactory($client);
-$client = $clientFactory->create(new FactoryToServiceIterator($container, $clients));
-// Alternatively:
-// $toService = new FactoryToServiceIterator($container, $clients);
-// $client = (new ClientsFactory($client, $toService))->create();
-```
-
-These examples demonstrate how to efficiently manage HTTP requests and responses in your PHP application using the provided HTTP client classes and the ClientsFactory.
-
-## Clients
-
-### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
-
-The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests. Here are some benefits and considerations:
-
-- **Development Efficiency**: Speeds up development by caching responses, reducing the need for repeated API calls during development.
-- **Local Testing**: Enable the `saveOnly` option in production to cache responses and download them for testing on localhost, ensuring consistency and performance.
-- **Customization**: Customize cache key preparation by implementing your own contract in [CacheKeyMakerAction.php](src/Actions/CacheKeyMakerAction.php).
-
-Example:
-```php
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseClientFactory;
@@ -97,6 +57,48 @@ $client = $clientFactory->create($toService);
 $clientFactory = new ClientsFactory($client, $toService);
 $client = $clientFactory->create();
 ```
+
+These examples demonstrate how to efficiently manage HTTP requests and responses in your PHP application using the provided HTTP client classes and the ClientsFactory.
+
+## ConfigManager
+
+How set up specific behavior per host.
+
+If in client's namespace contains Config class, you can use it and modify. Two levels exists. Fist option is default for all hosts and second option is per host.
+
+Global setup.
+```php
+use StrictPhp\HttpClients\Managers\ConfigManager;
+use StrictPhp\HttpClients\Clients\Sleep;
+
+// set up for SleepClient
+$config = new Sleep\Config(1000, 2000);
+
+/** @var ConfigManager $configManager */
+$configManager->addDefault($config);
+```
+
+Set up for defined host.
+```php
+use StrictPhp\HttpClients\Managers\ConfigManager;
+use StrictPhp\HttpClients\Clients\Sleep;
+
+// set up for SleepClient
+$config = new Sleep\Config(1000, 2000);
+
+/** @var ConfigManager $configManager */
+$configManager->add('www.example.com', $config);
+```
+
+## Clients
+
+### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
+
+The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests. Here are some benefits and considerations:
+
+- **Development Efficiency**: Speeds up development by caching responses, reducing the need for repeated API calls during development.
+- **Local Testing**: Enable the `saveOnly` option in production to cache responses and download them for testing on localhost, ensuring consistency and performance.
+- **Customization**: Customize cache key preparation by implementing your own contract in [CacheKeyMakerAction.php](src/Actions/CacheKeyMakerAction.php).
 
 ### CustomResponseClient ([file](src/Clients/CustomResponse/CustomResponseClient.php))
 
@@ -148,3 +150,103 @@ The FailedClient always fails and throws ClientExceptionInterface. This client c
 ### SleepClient ([file](src/Clients/Sleep/SleepClient.php))
 
 The SleepClient allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
+
+
+# Write own client
+
+You can write own client and extends behavior. There are prepared few interfaces.
+
+- Client implements `Psr\Http\Client\ClientInterface`. 
+- Config implements `StrictPhp\HttpClients\Contracts\ConfigContract`
+- Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
+
+### Example
+
+#### Config
+
+```php
+namespace My;
+
+use StrictPhp\HttpClients\Contracts\ConfigContract;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * parameters of constructor must have to filled default values  
+ */
+class Config implements ConfigContract 
+{
+    public function __construct(
+        int $optionA = 1,
+        int $optionB = 2,
+    ) {
+    }    
+
+    public function initFromDefaultConfig(ConfigContract $object): void 
+    {
+        // if you want to pass an object reference from the default configuration
+        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\Config */
+        
+        // or
+        /** @see \StrictPhp\HttpClients\Clients\Sleep\Config */
+    }
+    
+}
+```
+
+#### Client
+
+```php
+namespace My;
+
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use My\Config;
+
+class MyClient implements ClientInterface 
+{
+    public function __construct(
+        private ClientInterface $client
+    ) {
+    }    
+
+
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        $host = $request->getUri()->getHost();
+        $config = $this->configManager->get(Config::class, $host);
+        $config->optionA;
+        $config->optionB;
+        
+        // do anything
+        $response = $this->client->sendRequest($request)
+        // do anything
+        
+        return $response;
+    }
+    
+}
+```
+
+#### ClientFactory
+
+```php
+namespace My;
+
+use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use My\Config;
+
+class ClientFactory implements ClientFactoryContract 
+{
+
+    public function create(ClientInterface $client): ClientInterface
+    {
+        return new MyClient($client);
+    }
+    
+}
+```
