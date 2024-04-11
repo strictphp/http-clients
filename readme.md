@@ -62,11 +62,10 @@ These examples demonstrate how to efficiently manage HTTP requests and responses
 
 ## ConfigManager
 
-How set up specific behavior per host.
+Config manager is designed for setting different configuration per host (IP, domain). Each HTTP client can contain `Config` class in their namespace. 
 
-If in client's namespace contains Config class, you can use it and modify. Two levels exists. Fist option is default for all hosts and second option is per host.
+**Setting up default configuration**
 
-Global setup.
 ```php
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
@@ -78,7 +77,8 @@ $config = new Sleep\Config(1000, 2000);
 $configManager->addDefault($config);
 ```
 
-Set up for defined host.
+**Setting up override for given domain**
+
 ```php
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
@@ -87,10 +87,15 @@ use StrictPhp\HttpClients\Clients\Sleep;
 $config = new Sleep\Config(1000, 2000);
 
 /** @var ConfigManager $configManager */
-$configManager->add('www.example.com', $config);
+$configManager->add('strictphp.com', $config);
 ```
 
+**You should set your DI container to provide ConfigManager as a singleton.**
+
 ## Clients
+
+- Each client can be built using its own Factory class (in their namespace). Factory uses a DI container that should resolve: ClientInterface for HTTP/s communication and ConfigManaer
+- Each client can be configured by ConfigManager.
 
 ### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
 
@@ -115,7 +120,7 @@ You need to set up container dependency to add the content you need.
 
 ### CustomizeRequestClient ([file](src/Clients/CustomizeRequest/CustomizeRequestClient.php))
 
-Define modification for request per host.
+Alter request before sending it to the HTTPClient.
 
 ```php
 use Psr\Http\Message\RequestInterface;
@@ -139,7 +144,7 @@ You can attach events before, failed or request success. It is useful for loggin
 
 ### RetryClient ([file](src/Clients/Retry/RetryClient.php))
 
-The failed request tries to send once more. Let's combine with SleepClient, which register after RetryClient.
+Retry client is designed to retry failed request with ability to define number of tries and allowlist (based on exception).
 
 ### FailedClient ([file](src/Clients/Failed/FailedClient.php))
 
@@ -151,18 +156,17 @@ The FailedClient always fails and throws ClientExceptionInterface. This client c
 
 The SleepClient allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
 
+# Write your own client
 
-# Write own client
+You can write your own client simply by implementing these interfaces:
 
-You can write own client and extends behavior. There are prepared few interfaces.
-
-- Client implements `Psr\Http\Client\ClientInterface`. 
-- Config implements `StrictPhp\HttpClients\Contracts\ConfigContract`
+- Client must implement `Psr\Http\Client\ClientInterface`. 
+- Config must implement `StrictPhp\HttpClients\Contracts\ConfigContract`
 - Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
 
-### Example
+Below is an example of a implementation:
 
-#### Config
+## Config
 
 ```php
 namespace My;
@@ -177,8 +181,8 @@ use Psr\Http\Message\ResponseInterface;
 class Config implements ConfigContract 
 {
     public function __construct(
-        int $optionA = 1,
-        int $optionB = 2,
+        private readonly int $optionA = 1,
+        private readonly int int $optionB = 2,
     ) {
     }    
 
@@ -194,7 +198,9 @@ class Config implements ConfigContract
 }
 ```
 
-#### Client
+## Client
+
+
 
 ```php
 namespace My;
@@ -202,12 +208,14 @@ namespace My;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 use My\Config;
 
 class MyClient implements ClientInterface 
 {
     public function __construct(
-        private ClientInterface $client
+        private ClientInterface $client,
+        private ConfigManager $configManager,
     ) {
     }    
 
@@ -229,7 +237,7 @@ class MyClient implements ClientInterface
 }
 ```
 
-#### ClientFactory
+## ClientFactory
 
 ```php
 namespace My;
