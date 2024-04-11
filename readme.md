@@ -8,6 +8,7 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[CacheResponseClient](#cacheresponseclient-file)**: Utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests.
 - **[CustomizeRequestClient](#customizerequestclient-file)**: You can modify the request before sending it.
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
+- **[RetryClient](#retryclient-file)**: If the call sendRequest throw exception, it tries to send request once more.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
 - Save your requests as PHPStorm `.http` file and corresponding response as a file.
 
@@ -133,6 +134,10 @@ You can attach events before, failed or request success. It is useful for loggin
 
 - save http file for PHPStorm [SaveForPhpstormRequest.php](src/Requests/SaveForPhpstormRequest.php)
 - save response [SaveResponse.php](src/Responses/SaveResponse.php)
+
+### RetryClient ([file](src/Clients/Retry/RetryClient.php))
+
+The failed request tries to send once more. Let's combine with SleepClient, which register after RetryClient.
 
 ### FailedClient ([file](src/Clients/Failed/FailedClient.php))
 
