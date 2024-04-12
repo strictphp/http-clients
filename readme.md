@@ -250,10 +250,14 @@ use My\Config;
 
 class ClientFactory implements ClientFactoryContract 
 {
-
+    public function __construct(
+        private ConfigManager $configManager,
+    ) {
+    } 
+    
     public function create(ClientInterface $client): ClientInterface
     {
-        return new MyClient($client);
+        return new MyClient($client, $this->configManager);
     }
     
 }
