@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Requests;
 
@@ -26,14 +24,18 @@ final class SaveForPhpstormRequest
         private readonly MakePathActionContract $makePathAction,
         private readonly SaveResponse $saveResponse,
         private readonly StreamActionContract $streamAction,
-        private readonly int $bufferSize = 8192
+        private readonly int $bufferSize = 8192,
     ) {
     }
 
-    public function save(AbstractCompleteRequestEvent $event, ?ResponseInterface $response = null, ?bool $serialized = null): void
+    public function save(
+        AbstractCompleteRequestEvent $event,
+        ?ResponseInterface $response = null,
+        ?bool $serialized = null,
+    ): void
     {
         $file = $this->fileFactory->create($this->makePathAction->execute($event, 'q.http'));
-        $file->write("### Duration: $event->duration" . Headers::Eol);
+        $file->write('### Duration: ' . $event->duration . Headers::Eol);
         $file->write($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);
         foreach (Headers::toIterable($event->request->getHeaders()) as $header) {
             $file->write($header . Headers::Eol);
@@ -42,7 +44,7 @@ final class SaveForPhpstormRequest
 
         $this->streamAction->execute($event->request->getBody(), $file, $this->bufferSize);
 
-        if ($response !== null) {
+        if ($response instanceof ResponseInterface) {
             $this->saveResponse->save($event, $response, $serialized);
         }
     }

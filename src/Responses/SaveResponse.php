@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Responses;
 
@@ -30,7 +28,11 @@ final class SaveResponse
     ) {
     }
 
-    public function save(AbstractCompleteRequestEvent $event, ResponseInterface $response, ?bool $serialized = null): void
+    public function save(
+        AbstractCompleteRequestEvent $event,
+        ResponseInterface $response,
+        ?bool $serialized = null,
+    ): void
     {
         $serialized ??= $this->serialized;
 
@@ -40,7 +42,7 @@ final class SaveResponse
             $this->headersAndBody($fileInfo, $event->duration, $response);
         }
 
-        if ($serialized === null || $serialized === true) {
+        if ($serialized === null || $serialized) {
             $this->serialized($fileInfo, $response);
         }
     }
@@ -51,10 +53,17 @@ final class SaveResponse
         $this->body($fileInfo, $response);
     }
 
+    public function serialized(FileInfoEntity $fileInfo, ResponseInterface $response): void
+    {
+        $file = $this->fileFactory->create($fileInfo, 'shttp');
+
+        $file->write((string) (new SerializableResponse($response)));
+    }
+
     private function headers(FileInfoEntity $fileInfo, float $duration, ResponseInterface $response): void
     {
         $file = $this->fileFactory->create($fileInfo, 'headers');
-        $file->write("### Duration: $duration, code: " . $response->getStatusCode() . Headers::Eol);
+        $file->write(sprintf('### Duration: %s, code: ', $duration) . $response->getStatusCode() . Headers::Eol);
         foreach (Headers::toIterable($response->getHeaders()) as $header) {
             $file->write($header . Headers::Eol);
         }
@@ -68,12 +77,5 @@ final class SaveResponse
         $this->streamAction->execute($response->getBody(), $file, $this->bufferSize);
 
         $file->write(Headers::Eol);
-    }
-
-    public function serialized(FileInfoEntity $fileInfo, ResponseInterface $response): void
-    {
-        $file = $this->fileFactory->create($fileInfo, 'shttp');
-
-        $file->write((string) (new SerializableResponse($response)));
     }
 }

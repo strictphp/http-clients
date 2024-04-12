@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Event\Entities;
 
@@ -10,7 +8,6 @@ use StrictPhp\HttpClients\Helpers\Time;
 final class HttpStateEntity
 {
     public readonly string $id;
-
     public readonly float $start;
 
     /**
@@ -23,8 +20,9 @@ final class HttpStateEntity
      */
     public float $duration = 0.0;
 
-
-    public function __construct(public readonly RequestInterface $request)
+    public function __construct(
+        public readonly RequestInterface $request,
+    )
     {
         $this->start = Time::micro();
         $this->id = md5($this->start . $this->request->getUri());
@@ -37,5 +35,4 @@ final class HttpStateEntity
 
         return $this;
     }
-
 }

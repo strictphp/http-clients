@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Event;
 
@@ -9,7 +8,9 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 
 final class EventClientFactory implements ClientFactoryContract
 {
-    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
+    )
     {
     }
 

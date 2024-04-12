@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Event\Events;
 
@@ -9,7 +7,10 @@ use StrictPhp\HttpClients\Clients\Event\Entities\HttpStateEntity;
 
 final class SuccessRequestEvent extends AbstractCompleteRequestEvent
 {
-    public function __construct(HttpStateEntity $stateEntity, public readonly ResponseInterface $response)
+    public function __construct(
+        HttpStateEntity $stateEntity,
+        public readonly ResponseInterface $response,
+    )
     {
         parent::__construct($stateEntity);
     }

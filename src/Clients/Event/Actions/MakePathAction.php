@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Event\Actions;
 
@@ -19,10 +17,7 @@ final class MakePathAction implements MakePathActionContract
             date('H', (int) $event->start),
         ]);
 
-        $filename = implode('-', [
-                date('H-i-sO', (int) $event->start),
-                $event->id,
-            ]) . ".$extension";
+        $filename = implode('-', [date('H-i-sO', (int) $event->start), $event->id]) . ('.' . $extension);
 
         return new FileInfoEntity($directory, $filename);
     }

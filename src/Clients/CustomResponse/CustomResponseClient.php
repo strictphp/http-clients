@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\CustomResponse;
 
@@ -13,13 +11,16 @@ use StrictPhp\HttpClients\Responses\SerializableResponse;
 
 class CustomResponseClient implements ClientInterface
 {
-    public function __construct(private readonly string $content, private readonly ?Filesystem $filesystem = null)
+    public function __construct(
+        private readonly string $content,
+        private readonly ?Filesystem $filesystem = null,
+    )
     {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        if ($this->filesystem !== null && $this->filesystem->exists($this->content)) {
+        if ($this->filesystem instanceof Filesystem && $this->filesystem->exists($this->content)) {
             $body = (string) $this->filesystem->get($this->content);
         } elseif (is_file($this->content)) {
             $body = (string) file_get_contents($this->content);
@@ -36,5 +37,4 @@ class CustomResponseClient implements ClientInterface
 
         return new Response(body: $body);
     }
-
 }

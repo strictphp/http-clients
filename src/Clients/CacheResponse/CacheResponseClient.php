@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\CacheResponse;
 
@@ -29,7 +27,8 @@ final class CacheResponseClient implements ClientInterface
             return $this->request($request);
         }
 
-        $key = $config->getCacheKeyMakerAction()->execute($request);
+        $key = $config->getCacheKeyMakerAction()
+            ->execute($request);
         $response = $config->saveOnly ? null : $this->restoreRequest($key);
 
         if ($response instanceof ResponseInterface === false) {
@@ -44,7 +43,6 @@ final class CacheResponseClient implements ClientInterface
     {
         return $this->client->sendRequest($request);
     }
-
 
     private function restoreRequest(string $key): ?ResponseInterface
     {

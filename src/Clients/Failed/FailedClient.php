@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Failed;
 
@@ -25,7 +23,6 @@ final class FailedClient implements ClientInterface
         }
 
         throw new class($this->message, $this->code) extends Exception implements ClientExceptionInterface {
-
         };
     }
 }

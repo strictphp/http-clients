@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\CacheResponse\Actions;
 
@@ -14,7 +12,7 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
         $headers = $request->getHeaders();
         $body = $request->getBody();
 
-        foreach ($headers as $name => $header) {
+        foreach (array_keys($headers) as $name) {
             if (str_starts_with(strtolower($name), 'x-')) {
                 unset($headers[$name]);
             }

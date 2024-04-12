@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Actions;
 
@@ -28,5 +26,4 @@ final class FindExtensionFromHeadersAction implements FindExtensionFromHeadersAc
 
         return 'txt';
     }
-
 }

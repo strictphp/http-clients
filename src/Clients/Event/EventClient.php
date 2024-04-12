@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Event;
 
@@ -29,9 +27,9 @@ final class EventClient implements ClientInterface
         $this->eventDispatcher->dispatch(new BeforeRequestEvent($httpState));
         try {
             $response = $this->client->sendRequest($request);
-        } catch (Throwable $exception) {
-            $this->eventDispatcher->dispatch(new FailedRequestEvent($httpState->finish(), $exception));
-            throw $exception;
+        } catch (Throwable $throwable) {
+            $this->eventDispatcher->dispatch(new FailedRequestEvent($httpState->finish(), $throwable));
+            throw $throwable;
         }
 
         // keep out of try-catch block
