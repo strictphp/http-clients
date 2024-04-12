@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Factories;
 
@@ -14,7 +12,7 @@ final class ClientsFactory
      */
     public function __construct(
         private readonly ClientInterface $client,
-        private iterable $factories = [],
+        private readonly iterable $factories = [],
     ) {
     }
 

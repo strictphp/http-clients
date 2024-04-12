@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\Sleep;
 
@@ -20,13 +18,13 @@ final class SleepClient implements ClientInterface
     public function __construct(
         private readonly ClientInterface $client,
         private readonly ConfigManager $configManager,
-
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $host = $request->getUri()->getHost();
+        $host = $request->getUri()
+            ->getHost();
         $config = $this->configManager->get(Config::class, $host);
 
         if ($config->to > 0 && isset($this->timeout[$host])) {

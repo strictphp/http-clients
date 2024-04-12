@@ -27,5 +27,4 @@ final class Config implements ConfigContract
     {
         return $this->cacheKeyMakerAction ??= new CacheKeyMakerAction();
     }
-
 }

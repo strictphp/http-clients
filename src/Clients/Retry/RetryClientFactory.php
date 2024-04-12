@@ -8,7 +8,9 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 
 final class RetryClientFactory implements ClientFactoryContract
 {
-    public function __construct(private readonly ConfigManager $configManager)
+    public function __construct(
+        private readonly ConfigManager $configManager,
+    )
     {
     }
 
@@ -16,5 +18,4 @@ final class RetryClientFactory implements ClientFactoryContract
     {
         return new RetryClient($client, $this->configManager);
     }
-
 }

@@ -15,7 +15,9 @@ final class ReverseIterator implements IteratorAggregate
     /**
      * @param array<T> $factories
      */
-    public function __construct(private readonly array $factories)
+    public function __construct(
+        private readonly array $factories,
+    )
     {
     }
 
@@ -30,5 +32,4 @@ final class ReverseIterator implements IteratorAggregate
             yield $this->factories[$i];
         }
     }
-
 }

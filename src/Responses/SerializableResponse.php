@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Responses;
 
@@ -21,12 +19,9 @@ final class SerializableResponse implements Serializable, Stringable
     ) {
     }
 
-    public function unserialize(string $data): void
+    public function __toString(): string
     {
-        /** @var SerializeType $responseData */
-        $responseData = unserialize($data);
-
-        $this->__unserialize($responseData);
+        return (string) $this->serialize();
     }
 
     /**
@@ -45,16 +40,6 @@ final class SerializableResponse implements Serializable, Stringable
             ->withBody(Utils::streamFor($data['body']));
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->serialize();
-    }
-
-    public function serialize(): ?string
-    {
-        return serialize($this->__serialize());
-    }
-
     /**
      * @return SerializeType
      */
@@ -68,5 +53,18 @@ final class SerializableResponse implements Serializable, Stringable
             'reason' => $this->response->getReasonPhrase(),
             'body' => Stream::content($this->response->getBody()),
         ];
+    }
+
+    public function unserialize(string $data): void
+    {
+        /** @var SerializeType $responseData */
+        $responseData = unserialize($data);
+
+        $this->__unserialize($responseData);
+    }
+
+    public function serialize(): ?string
+    {
+        return serialize($this->__serialize());
     }
 }

@@ -17,7 +17,10 @@ final class Config implements ConfigContract
     /**
      * @param positive-int $tries
      */
-    public function __construct(public readonly int $tries = 2, ?callable $isMyException = null)
+    public function __construct(
+        public readonly int $tries = 2,
+        ?callable $isMyException = null,
+    )
     {
         $this->isMyException = $isMyException ?? static fn (Throwable $e): bool => $e instanceof ClientExceptionInterface;
     }
@@ -26,5 +29,4 @@ final class Config implements ConfigContract
     {
         // intentionally empty
     }
-
 }

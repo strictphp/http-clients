@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Helpers;
 
@@ -25,7 +23,7 @@ final class Headers
                 $value = substr($value, 0, -1 * $replace) . $suffix;
             }
 
-            yield "$name: $value";
+            yield sprintf('%s: %s', $name, $value);
         }
     }
 }

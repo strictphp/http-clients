@@ -10,7 +10,9 @@ use StrictPhp\HttpClients\Filesystem\Wrappers\File;
 
 final class FileFactory implements FileFactoryContract
 {
-    public function __construct(private readonly Filesystem $filesystem)
+    public function __construct(
+        private readonly Filesystem $filesystem,
+    )
     {
     }
 

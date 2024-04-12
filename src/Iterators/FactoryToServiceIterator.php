@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Iterators;
 
@@ -17,7 +15,10 @@ final class FactoryToServiceIterator implements IteratorAggregate
     /**
      * @param array<class-string<ClientFactoryContract>> $factories
      */
-    public function __construct(private readonly ContainerInterface $container, private readonly array $factories)
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly array $factories,
+    )
     {
     }
 
@@ -33,5 +34,4 @@ final class FactoryToServiceIterator implements IteratorAggregate
             yield $factory;
         }
     }
-
 }

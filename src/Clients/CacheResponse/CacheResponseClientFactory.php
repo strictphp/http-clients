@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Clients\CacheResponse;
 
@@ -20,5 +19,4 @@ final class CacheResponseClientFactory implements ClientFactoryContract
     {
         return new CacheResponseClient($client, $this->cache, $this->configManager);
     }
-
 }
