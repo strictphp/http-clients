@@ -29,7 +29,9 @@ Example:
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseClientFactory;
+use StrictPhp\HttpClients\Clients\CustomizeRequest\CustomizeRequestClientFactory;
 use StrictPhp\HttpClients\Clients\Event\EventClientFactory;
+use StrictPhp\HttpClients\Clients\Retry\RetryClientFactory;
 use StrictPhp\HttpClients\Clients\Sleep\SleepClientFactory;
 use Strictphp\HttpClients\Factories\ClientsFactory;
 use Strictphp\HttpClients\Iterators\FactoryToServiceIterator;
@@ -38,11 +40,13 @@ use Strictphp\HttpClients\Iterators\FactoryToServiceIterator;
 /** @var ClientInterface $client */
 /** @var ContainerInterface $container */
 
-// the order of classes is important
+// the order of classes is important, see image below
 $clients = [
     CacheResponseClientFactory::class, // used like first
+    RetryClientFactory::class
     SleepClientFactory::class,
     EventClientFactory::class,
+    CustomizeRequestClientFactory::class,
     // Other client factories...
 ];
 
@@ -59,6 +63,8 @@ $client = $clientFactory->create();
 ```
 
 These examples demonstrate how to efficiently manage HTTP requests and responses in your PHP application using the provided HTTP client classes and the ClientsFactory.
+
+![image](.github/http-clients.drawio.png)
 
 ## ConfigManager
 
