@@ -25,10 +25,10 @@ final class ConfigManager
 
     public function addDefault(ConfigContract $config): void
     {
-        if ($this->existsDefault($config::class)) {
+        if ($this->defaultExists($config::class)) {
             throw new InvalidStateException(sprintf('Default config for "%s" already exists.', $config::class));
         }
-        $this->addDefaultForce($config);
+        $this->forceDefault($config);
     }
 
     /**
@@ -50,14 +50,14 @@ final class ConfigManager
      */
     private function getDefault(string $class): ConfigContract
     {
-        if ($this->existsDefault($class) === false) {
-            $this->addDefaultForce(new $class());
+        if ($this->defaultExists($class) === false) {
+            $this->forceDefault(new $class());
         }
 
         return $this->defaults[$class];
     }
 
-    private function addDefaultForce(ConfigContract $config): void
+    private function forceDefault(ConfigContract $config): void
     {
         $this->defaults[$config::class] = $config;
     }
@@ -65,7 +65,7 @@ final class ConfigManager
     /**
      * @param class-string<ConfigContract> $class
      */
-    private function existsDefault(string $class): bool
+    private function defaultExists(string $class): bool
     {
         return array_key_exists($class, $this->defaults);
     }
