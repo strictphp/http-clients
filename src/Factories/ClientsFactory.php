@@ -4,8 +4,9 @@ namespace StrictPhp\HttpClients\Factories;
 
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
+use StrictPhp\HttpClients\Contracts\ClientsFactoryContract;
 
-final class ClientsFactory
+final class ClientsFactory implements ClientsFactoryContract
 {
     /**
      * @param iterable<ClientFactoryContract> $factories
@@ -16,12 +17,9 @@ final class ClientsFactory
     ) {
     }
 
-    /**
-     * @param iterable<ClientFactoryContract> $factories
-     */
-    public function create(iterable $factories = null): ClientInterface
+    public function create(?ClientInterface $client = null, iterable $factories = null): ClientInterface
     {
-        $client = $this->client;
+        $client ??= $this->client;
         foreach ($factories ?? $this->factories as $factory) {
             $client = $factory->create($client);
         }
