@@ -4,13 +4,20 @@ namespace StrictPhp\HttpClients\Helpers;
 
 final class Time
 {
-    public static function micro(): float
+    public static function seconds(): float
     {
         return microtime(true);
     }
 
+    public static function milli(): float
+    {
+        return self::seconds() * 1000;
+    }
+
     public static function sleep(int $milliSeconds): void
     {
-        usleep($milliSeconds * 1000);
+        if ($milliSeconds > 0) {
+            usleep($milliSeconds * 1000);
+        }
     }
 }

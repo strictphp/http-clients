@@ -7,8 +7,8 @@ use StrictPhp\HttpClients\Contracts\ConfigContract;
 final class Config implements ConfigContract
 {
     public function __construct(
-        public readonly int $from = 500,
-        public readonly int $to = 1000,
+        public readonly int $from = 500, // milliseconds
+        public readonly int $to = 1000, // milliseconds
     ) {
     }
 
