@@ -197,7 +197,7 @@ class Config implements ConfigContract
         // if you want to pass an object reference from the default configuration
         /** @see \StrictPhp\HttpClients\Clients\CacheResponse\Config */
         
-        // or
+        // or empty
         /** @see \StrictPhp\HttpClients\Clients\Sleep\Config */
     }
     
