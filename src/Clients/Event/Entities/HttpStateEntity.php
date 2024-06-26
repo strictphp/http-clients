@@ -30,8 +30,10 @@ final class HttpStateEntity
 
     public function finish(): self
     {
-        $this->end = Time::seconds();
-        $this->duration = $this->end - $this->start;
+        if ($this->end === 0.0) {
+            $this->end = Time::seconds();
+            $this->duration = $this->end - $this->start;
+        }
 
         return $this;
     }

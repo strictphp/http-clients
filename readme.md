@@ -10,7 +10,7 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
 - **[RetryClient](#retryclient-file)**: If the call sendRequest throw exception, it tries to send request once more.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
-- Save your requests as PHPStorm `.http` file and corresponding response as a file.
+- **[StoreClient](#storeclient-file)**: Save your re**Q**uests as PHPStorm `Q.http` file and corresponding re**S**ponse as a file with suffix `S.[headers|xml|txt|json|html|pdf]`.
 
 ## Installation
 
@@ -43,7 +43,7 @@ use Strictphp\HttpClients\Iterators\FactoryToServiceIterator;
 // the order of classes is important, see image below
 $clients = [
     CacheResponseClientFactory::class, // used like first
-    RetryClientFactory::class
+    RetryClientFactory::class,
     SleepClientFactory::class,
     EventClientFactory::class,
     CustomizeRequestClientFactory::class,
@@ -161,6 +161,13 @@ The FailedClient always fails and throws ClientExceptionInterface. This client c
 ### SleepClient ([file](src/Clients/Sleep/SleepClient.php))
 
 The SleepClient allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
+
+### StoreClient ([file](src/Clients/Store/StoreClient.php))
+
+The StoreClient saves request and response, without dependency on PSR-14
+
+- save http file for PHPStorm [SaveForPhpstormRequest.php](src/Requests/SaveForPhpstormRequest.php)
+- save response [SaveResponse.php](src/Responses/SaveResponse.php)
 
 # Write your own client
 

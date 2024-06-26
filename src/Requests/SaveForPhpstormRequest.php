@@ -34,7 +34,7 @@ final class SaveForPhpstormRequest
         ?bool $serialized = null,
     ): void
     {
-        $file = $this->fileFactory->create($this->makePathAction->execute($event, 'q.http'));
+        $file = $this->fileFactory->create($this->makePathAction->execute($event, 'Q.http'));
         $file->write('### Duration: ' . $event->duration . Headers::Eol);
         $file->write($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);
         foreach (Headers::toIterable($event->request->getHeaders()) as $header) {
