@@ -11,11 +11,32 @@ final class File implements FileContract
 
     public function __construct(string $path)
     {
-        $this->file = new SplFileObject($path, 'w');
+        touch($path);
+        $this->file = new SplFileObject($path, 'r+');
     }
 
     public function write(string $content): void
     {
         $this->file->fwrite($content);
+    }
+
+    public function content(): ?string
+    {
+        $size = $this->file->getSize();
+
+        if ($size === 0) {
+            return null;
+        }
+        $content = $this->file->fread($size);
+        if ($content === false) {
+            return null;
+        }
+
+        return $content;
+    }
+
+    public function remove(): void
+    {
+        @unlink($this->file->getPathname());
     }
 }

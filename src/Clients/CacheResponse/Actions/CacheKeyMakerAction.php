@@ -18,7 +18,7 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
             }
         }
 
-        return md5((string) json_encode([
+        return sha1((string) json_encode([
             $request->getMethod(),
             $request->getProtocolVersion(),
             $headers,
