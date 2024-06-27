@@ -29,7 +29,7 @@ class CustomResponseClient implements ClientInterface
         }
 
         if ($body !== '') {
-            $response = unserialize($body);
+            $response = @unserialize($body);
             if ($response instanceof SerializableResponse) {
                 return $response->response;
             }
