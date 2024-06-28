@@ -64,16 +64,12 @@ final class ConfigManagerFactory
         $configManager = new ConfigManager();
 
         if (isset($config[$this->keyDefault])) {
-            foreach ($this->buildConfigManager($config[$this->keyDefault]) as $configObject) {
-                $configManager->addDefault($configObject);
-            }
+            $configManager->addDefault($this->buildConfigManager($config[$this->keyDefault]));
         }
         unset($config[$this->keyDefault]);
 
         foreach ($config as $host => $values) {
-            foreach ($this->buildConfigManager($values) as $configObject) {
-                $configManager->add($host, $configObject);
-            }
+            $configManager->add($host, $this->buildConfigManager($values));
         }
 
         return $configManager;
