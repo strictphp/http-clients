@@ -4,31 +4,50 @@ namespace StrictPhp\HttpClients\Managers;
 
 use StrictPhp\HttpClients\Contracts\ConfigContract;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Helpers\Host;
 
 final class ConfigManager
 {
     /**
-     * @var array<class-string<ConfigContract>, array<string, ConfigContract>>
+     * @param array<string, array<class-string<ConfigContract>, ConfigContract>> $configs
+     * @param array<class-string<ConfigContract>, ConfigContract> $defaults
      */
-    private array $configs = [];
-
-    /**
-     * @var array<class-string<ConfigContract>, ConfigContract>
-     */
-    private array $defaults = [];
-
-    public function add(string $host, ConfigContract $config): void
-    {
-        $config->initFromDefaultConfig($this->getDefault($config::class));
-        $this->configs[$config::class][$host] = $config;
+    public function __construct(
+        private array $configs = [],
+        private array $defaults = [],
+    ) {
     }
 
-    public function addDefault(ConfigContract $config): void
+    /**
+     * @param ConfigContract|iterable<ConfigContract> $configs
+     */
+    public function add(string $host, ConfigContract|iterable $configs): void
     {
-        if ($this->defaultExists($config::class)) {
-            throw new InvalidStateException(sprintf('Default config for "%s" already exists.', $config::class));
+        if (is_iterable($configs)) {
+            foreach ($configs as $config) {
+                $this->add($host, $config);
+            }
+        } else {
+            $configs->initFromDefaultConfig($this->getDefault($configs::class));
+            $this->configs[$host][$configs::class] = $configs;
         }
-        $this->forceDefault($config);
+    }
+
+    /**
+     * @param ConfigContract|iterable<ConfigContract> $configs
+     */
+    public function addDefault(ConfigContract|iterable $configs): void
+    {
+        if (is_iterable($configs)) {
+            foreach ($configs as $config) {
+                $this->addDefault($config);
+            }
+        } else {
+            if ($this->defaultExists($configs::class)) {
+                throw new InvalidStateException(sprintf('Default config for "%s" already exists.', $configs::class));
+            }
+            $this->forceDefault($configs);
+        }
     }
 
     /**
@@ -39,8 +58,10 @@ final class ConfigManager
      */
     public function get(string $class, string $host): ConfigContract
     {
-        $config = $this->configs[$class][$host] ?? $this->getDefault($class);
-        assert($config instanceof $class);
+        $config = $this->configs[$host][$class]
+            ?? $this->configs[Host::allSubdomains($host)][$class]
+            ?? $this->getDefault($class);
+        assert(is_a($config, $class));
 
         return $config;
     }
