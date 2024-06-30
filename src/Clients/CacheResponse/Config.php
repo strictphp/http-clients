@@ -8,12 +8,10 @@ use StrictPhp\HttpClients\Contracts\ConfigContract;
 
 final class Config implements ConfigContract
 {
-    /**
-     * @param int|null $ttl - 0 disable saving, $saveOnly does not work
-     */
     public function __construct(
-        public ?int $ttl = 0,
+        public int $ttl = 0,
         public bool $saveOnly = false,
+        public bool $enabled = true,
         private ?CacheKeyMakerActionContract $cacheKeyMakerAction = null,
     ) {
     }

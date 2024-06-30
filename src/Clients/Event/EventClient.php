@@ -10,18 +10,26 @@ use StrictPhp\HttpClients\Clients\Event\Entities\HttpStateEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\BeforeRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\FailedRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 use Throwable;
 
 final class EventClient implements ClientInterface
 {
     public function __construct(
         private readonly ClientInterface $client,
+        private readonly ConfigManager $configManager,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
+        $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
+
+        if ($config->enabled === false) {
+            return $this->client->sendRequest($request);
+        }
+
         $httpState = new HttpStateEntity($request);
 
         $this->eventDispatcher->dispatch(new BeforeRequestEvent($httpState));
