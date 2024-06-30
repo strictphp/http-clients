@@ -15,7 +15,7 @@ final class Config implements ConfigContract
     public $isMyException;
 
     /**
-     * @param positive-int $tries
+     * @param positive-int $tries - 1 is disabled
      */
     public function __construct(
         public readonly int $tries = 2,

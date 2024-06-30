@@ -21,7 +21,7 @@ final class CacheResponseClient implements ClientInterface
     {
         $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
 
-        if ($config->ttl !== null && $config->ttl < 1) {
+        if ($config->enabled === false) {
             return $this->client->sendRequest($request);
         }
 
@@ -31,7 +31,7 @@ final class CacheResponseClient implements ClientInterface
 
         if ($response instanceof ResponseInterface === false) {
             $response = $this->client->sendRequest($request);
-            $this->cacheRequestService->store($key, $response, $config->ttl);
+            $this->cacheRequestService->store($key, $response, $config->ttl === 0 ? null : $config->ttl);
         }
 
         return $response;
