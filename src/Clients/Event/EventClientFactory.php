@@ -10,8 +10,7 @@ final class EventClientFactory implements ClientFactoryContract
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
-    )
-    {
+    ) {
     }
 
     public function create(ClientInterface $client): ClientInterface

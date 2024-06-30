@@ -12,8 +12,7 @@ final class FileFactory implements FileFactoryContract
 {
     public function __construct(
         private readonly Filesystem $filesystem,
-    )
-    {
+    ) {
     }
 
     public function create(FileInfoEntity $file, string $suffix = ''): FileContract
