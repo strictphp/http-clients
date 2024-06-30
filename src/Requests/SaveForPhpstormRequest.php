@@ -32,8 +32,7 @@ final class SaveForPhpstormRequest
         AbstractCompleteRequestEvent $event,
         ?ResponseInterface $response = null,
         ?bool $serialized = null,
-    ): void
-    {
+    ): void {
         $file = $this->fileFactory->create($this->makePathAction->execute($event, 'Q.http'));
         $file->write('### Duration: ' . $event->duration . Headers::Eol);
         $file->write($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);

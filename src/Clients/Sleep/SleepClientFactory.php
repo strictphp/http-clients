@@ -10,8 +10,7 @@ final class SleepClientFactory implements ClientFactoryContract
 {
     public function __construct(
         private readonly ConfigManager $configManager,
-    )
-    {
+    ) {
     }
 
     public function create(ClientInterface $client): ClientInterface

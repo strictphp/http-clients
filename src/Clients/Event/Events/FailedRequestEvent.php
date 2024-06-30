@@ -10,8 +10,7 @@ final class FailedRequestEvent extends AbstractCompleteRequestEvent
     public function __construct(
         HttpStateEntity $stateEntity,
         public readonly Throwable $exception,
-    )
-    {
+    ) {
         parent::__construct($stateEntity);
     }
 }

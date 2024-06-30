@@ -20,9 +20,10 @@ final class Config implements ConfigContract
     public function __construct(
         public readonly int $tries = 2,
         ?callable $isMyException = null,
-    )
-    {
-        $this->isMyException = $isMyException ?? static fn (Throwable $e): bool => $e instanceof ClientExceptionInterface;
+    ) {
+        $this->isMyException = $isMyException ?? static fn (
+            Throwable $e,
+        ): bool => $e instanceof ClientExceptionInterface;
     }
 
     public function initFromDefaultConfig(ConfigContract $object): void
