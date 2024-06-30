@@ -127,6 +127,7 @@ You need to set up container dependency to add the content you need.
 ### CustomizeRequestClient ([file](src/Clients/CustomizeRequest/CustomizeRequestClient.php))
 
 Alter request before sending it to the HTTPClient.
+You can throw ClientExceptionInterface. This client could be useful for testing error handling mechanisms in your application and use cached *.shttp file.
 
 ```php
 use Psr\Http\Message\RequestInterface;
@@ -152,12 +153,6 @@ You can attach events before, failed or request success. It is useful for loggin
 
 Retry client is designed to retry failed request with ability to define number of tries and allowlist (based on exception).
 
-### FailedClient ([file](src/Clients/Failed/FailedClient.php))
-
-> Subject to change.
-
-The FailedClient always fails and throws ClientExceptionInterface. This client could be useful for testing error handling mechanisms in your application.
-
 ### SleepClient ([file](src/Clients/Sleep/SleepClient.php))
 
 The SleepClient allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
@@ -177,7 +172,20 @@ You can write your own client simply by implementing these interfaces:
 - Config must implement `StrictPhp\HttpClients\Contracts\ConfigContract`
 - Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
 
-Below is an example of a implementation:
+Below is an example of an implementation:
+
+## Testing
+
+You can save file with extension *.shttp by [SaveResponse](src/Responses/SaveResponse.php) or use our PSR16 implementation [CachePsr16Service](src/Services/CachePsr16Service.php). This file you can to use in tests by [CustomResponseClient](src/Clients/CustomResponse/CustomResponseClient.php).
+
+```php
+use StrictPhp\HttpClients\Clients\CustomResponse\CustomResponseClient;
+/** @var \Psr\Http\Message\RequestInterface $request */
+$client = new CustomResponseClient(__DIR__ . '/dir/filename.shttp');
+$response = $client->sendRequest($request);
+
+$response instanceof \Psr\Http\Message\ResponseInterface;
+```
 
 ## Config
 
@@ -187,11 +195,12 @@ namespace My;
 use StrictPhp\HttpClients\Contracts\ConfigContract;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 /**
  * parameters of constructor must have to filled default values  
  */
-class Config implements ConfigContract 
+class Config extends AbstractConfig 
 {
     public function __construct(
         private readonly int $optionA = 1,
