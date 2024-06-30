@@ -2,39 +2,39 @@
 
 namespace StrictPhp\HttpClients\Clients\CustomResponse;
 
+use Closure;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use StrictPhp\HttpClients\Responses\SerializableResponse;
+use StrictPhp\HttpClients\Services\CacheRequestService;
+use StrictPhp\HttpClients\Services\LoadCustomFileService;
 
 class CustomResponseClient implements ClientInterface
 {
+    /**
+     * @param string|ResponseInterface|CacheRequestService|Closure(): ResponseInterface $content
+     */
     public function __construct(
-        private readonly string $content,
-        private readonly ?Filesystem $filesystem = null,
-    )
-    {
+        private readonly string|ResponseInterface|Closure|CacheRequestService $content,
+    ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        if ($this->filesystem instanceof Filesystem && $this->filesystem->exists($this->content)) {
-            $body = (string) $this->filesystem->get($this->content);
-        } elseif (is_file($this->content)) {
-            $body = (string) file_get_contents($this->content);
+        if ($this->content instanceof Closure) {
+            return ($this->content)();
+        } elseif (is_string($this->content) && is_file($this->content)) {
+            $cache = new CacheRequestService(new LoadCustomFileService($this->content));
+            $body = $cache->restore('');
+        } elseif ($this->content instanceof CacheRequestService){
+            $body = $this->content->restore('');
         } else {
             $body = $this->content;
         }
 
-        if ($body !== '') {
-            $response = @unserialize($body);
-            if ($response instanceof SerializableResponse) {
-                return $response->response;
-            }
-        }
-
-        return new Response(body: $body);
+        return $body instanceof ResponseInterface
+            ? $body
+            : new Response(body: (string) $body);
     }
 }
