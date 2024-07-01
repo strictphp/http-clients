@@ -10,6 +10,12 @@ interface ConfigContract
     public function __construct();
 
     /**
+     * @param array<string, mixed> $an_array
+     * @return static
+     */
+    public static function __set_state(array $an_array): object;
+
+    /**
      * @param static $object
      */
     public function initFromDefaultConfig(self $object): void;

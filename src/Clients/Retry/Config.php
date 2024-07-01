@@ -4,9 +4,10 @@ namespace StrictPhp\HttpClients\Clients\Retry;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 use Throwable;
 
-final class Config implements ConfigContract
+final class Config extends AbstractConfig
 {
     /**
      * @var callable(Throwable): bool
