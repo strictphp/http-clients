@@ -3,9 +3,10 @@
 namespace StrictPhp\HttpClients\Clients\Sleep;
 
 use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 
-final class Config implements ConfigContract
+final class Config extends AbstractConfig
 {
     /**
      * @param int<1, max> $from milliseconds
@@ -21,7 +22,7 @@ final class Config implements ConfigContract
         }
     }
 
-    public function initFromDefaultConfig($object): void
+    public function initFromDefaultConfig(ConfigContract $object): void
     {
         // intentionally empty
     }

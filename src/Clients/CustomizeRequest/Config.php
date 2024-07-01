@@ -4,8 +4,9 @@ namespace StrictPhp\HttpClients\Clients\CustomizeRequest;
 
 use Psr\Http\Message\RequestInterface;
 use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 
-final class Config implements ConfigContract
+final class Config extends AbstractConfig
 {
     /**
      * @readonly
