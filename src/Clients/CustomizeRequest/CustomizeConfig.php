@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Clients\CustomizeRequest;
 
 use Psr\Http\Message\RequestInterface;
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 final class Config extends AbstractConfig
@@ -19,7 +19,7 @@ final class Config extends AbstractConfig
         $this->callback = $callback ?? static fn (RequestInterface $r): RequestInterface => $r;
     }
 
-    public function initFromDefaultConfig(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigInterface $object): void
     {
         // intentionally empty
     }

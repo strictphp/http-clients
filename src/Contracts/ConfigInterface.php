@@ -5,7 +5,7 @@ namespace StrictPhp\HttpClients\Contracts;
 /**
  * parameters in constructor are not require
  */
-interface ConfigContract
+interface ConfigInterface
 {
     public function __construct();
 

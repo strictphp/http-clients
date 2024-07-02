@@ -169,7 +169,7 @@ The StoreClient saves request and response, without dependency on PSR-14
 You can write your own client simply by implementing these interfaces:
 
 - Client must implement `Psr\Http\Client\ClientInterface`. 
-- Config must implement `StrictPhp\HttpClients\Contracts\ConfigContract`
+- Config must implement `StrictPhp\HttpClients\Contracts\ConfigInteface`
 - Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
 
 Below is an example of an implementation:
@@ -192,7 +192,7 @@ $response instanceof \Psr\Http\Message\ResponseInterface;
 ```php
 namespace My;
 
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
@@ -208,7 +208,7 @@ class Config extends AbstractConfig
     ) {
     }    
 
-    public function initFromDefaultConfig(ConfigContract $object): void 
+    public function initFromDefaultConfig(ConfigInterface $object): void 
     {
         // if you want to pass an object reference from the default configuration
         /** @see \StrictPhp\HttpClients\Clients\CacheResponse\Config */

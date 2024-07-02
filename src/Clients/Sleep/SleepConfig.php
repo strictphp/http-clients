@@ -2,7 +2,7 @@
 
 namespace StrictPhp\HttpClients\Clients\Sleep;
 
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 
@@ -22,7 +22,7 @@ final class Config extends AbstractConfig
         }
     }
 
-    public function initFromDefaultConfig(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigInterface $object): void
     {
         // intentionally empty
     }

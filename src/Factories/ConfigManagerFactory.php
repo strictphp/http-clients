@@ -8,21 +8,21 @@ use StrictPhp\HttpClients\Clients\CustomizeRequest\Config as CustomizeRequestCon
 use StrictPhp\HttpClients\Clients\Retry\Config as RetryConfig;
 use StrictPhp\HttpClients\Clients\Sleep\Config as SleepConfig;
 use StrictPhp\HttpClients\Clients\Store\Config as StoreConfig;
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
 /**
- * @phpstan-type config array<class-string<ConfigContract>, array<string, mixed>|null>|array<ConfigContract>
+ * @phpstan-type config array<class-string<ConfigInterface>, array<string, mixed>|null>|array<ConfigInterface>
  */
 final class ConfigManagerFactory
 {
     /**
-     * @var array<string, class-string<ConfigContract>>
+     * @var array<string, class-string<ConfigInterface>>
      */
     private readonly array $configAliases;
 
     /**
-     * @param array<string, class-string<ConfigContract>> $configAliases
+     * @param array<string, class-string<ConfigInterface>> $configAliases
      */
     public function __construct(
         private readonly string $keyDefault = 'default',
@@ -78,17 +78,17 @@ final class ConfigManagerFactory
     /**
      * @param config $config
      *
-     * @return Generator<ConfigContract>
+     * @return Generator<ConfigInterface>
      */
     private function buildConfigManager(array $config): Generator
     {
         foreach ($config as $configClass => $parameters) {
             if ($parameters === null) {
                 continue;
-            } elseif ($parameters instanceof ConfigContract) {
+            } elseif ($parameters instanceof ConfigInterface) {
                 $objectConfig = $parameters;
             } else {
-                /** @var class-string<ConfigContract> $class */
+                /** @var class-string<ConfigInterface> $class */
                 $class = $this->configAliases[$configClass] ?? $configClass;
                 $objectConfig = new $class(...$parameters);
             }
