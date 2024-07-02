@@ -3,9 +3,9 @@
 namespace StrictPhp\HttpClients\Filesystem\Wrappers;
 
 use SplFileObject;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
-final class File implements FileContract
+final class File implements FileInterface
 {
     private readonly SplFileObject $file;
 

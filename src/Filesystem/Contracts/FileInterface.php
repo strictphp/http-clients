@@ -2,7 +2,7 @@
 
 namespace StrictPhp\HttpClients\Filesystem\Contracts;
 
-interface FileContract
+interface FileInterface
 {
     public function write(string $content): void;
 
