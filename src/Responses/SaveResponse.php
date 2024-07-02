@@ -32,11 +32,10 @@ final class SaveResponse
         AbstractCompleteRequestEvent $event,
         ResponseInterface $response,
         ?bool $serialized = null,
-    ): void
-    {
+    ): void {
         $serialized ??= $this->serialized;
 
-        $fileInfo = $this->makePathAction->execute($event, 's.');
+        $fileInfo = $this->makePathAction->execute($event, 'S.');
 
         if ($serialized === null || $serialized === false) {
             $this->headersAndBody($fileInfo, $event->duration, $response);

@@ -4,11 +4,11 @@ namespace StrictPhp\HttpClients\Actions;
 
 use Psr\Http\Message\StreamInterface;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
 final class StreamAction implements StreamActionContract
 {
-    public function execute(StreamInterface $stream, FileContract $file, int $buffer): void
+    public function execute(StreamInterface $stream, FileInterface $file, int $buffer): void
     {
         if ($stream->isSeekable()) {
             $stream->rewind();

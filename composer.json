@@ -35,6 +35,7 @@
     "phpstan/phpstan": "^1.8",
     "phpstan/phpstan-deprecation-rules": "^1.1.3",
     "phpstan/phpstan-strict-rules": "^1.4",
+    "phpunit/phpunit": "^11.2",
     "strictphp/conventions": "^1.0"
   },
   "scripts": {
@@ -60,7 +61,11 @@
       "StrictPhp\\HttpClients\\": "src"
     }
   },
-  "autoload-dev": {},
+  "autoload-dev": {
+    "psr-4": {
+      "StrictPhp\\HttpClients\\Tests\\": "tests"
+    }
+  },
   "extra": {
     "laravel": {
       "providers": []

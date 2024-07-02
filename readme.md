@@ -10,7 +10,7 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
 - **[RetryClient](#retryclient-file)**: If the call sendRequest throw exception, it tries to send request once more.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
-- Save your requests as PHPStorm `.http` file and corresponding response as a file.
+- **[StoreClient](#storeclient-file)**: Save your re**Q**uests as PHPStorm `Q.http` file and corresponding re**S**ponse as a file with suffix `S.[headers|xml|txt|json|html|pdf]`.
 
 ## Installation
 
@@ -43,7 +43,7 @@ use Strictphp\HttpClients\Iterators\FactoryToServiceIterator;
 // the order of classes is important, see image below
 $clients = [
     CacheResponseClientFactory::class, // used like first
-    RetryClientFactory::class
+    RetryClientFactory::class,
     SleepClientFactory::class,
     EventClientFactory::class,
     CustomizeRequestClientFactory::class,
@@ -77,7 +77,7 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
 
 // set up for SleepClient
-$config = new Sleep\Config(1000, 2000);
+$config = new Sleep\SleepConfig(1000, 2000);
 
 /** @var ConfigManager $configManager */
 $configManager->addDefault($config);
@@ -90,7 +90,7 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
 
 // set up for SleepClient
-$config = new Sleep\Config(1000, 2000);
+$config = new Sleep\SleepConfig(1000, 2000);
 
 /** @var ConfigManager $configManager */
 $configManager->add('strictphp.com', $config);
@@ -127,14 +127,15 @@ You need to set up container dependency to add the content you need.
 ### CustomizeRequestClient ([file](src/Clients/CustomizeRequest/CustomizeRequestClient.php))
 
 Alter request before sending it to the HTTPClient.
+You can throw ClientExceptionInterface. This client could be useful for testing error handling mechanisms in your application and use cached *.shttp file.
 
 ```php
 use Psr\Http\Message\RequestInterface;
-use StrictPhp\HttpClients\Clients\CustomizeRequest\Config;
+use StrictPhp\HttpClients\Clients\CustomizeRequest\CustomizeRequestConfig;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
 /** @var ConfigManager $configManager */
-$configManager->add('www.example.com', new Config(function(RequestInterface $request): RequestInterface {
+$configManager->add('www.example.com', new CustomizeRequestConfig(function(RequestInterface $request): RequestInterface {
     return $request->withHeader('uuid', generate_uuid());
 }));
 ```
@@ -152,39 +153,54 @@ You can attach events before, failed or request success. It is useful for loggin
 
 Retry client is designed to retry failed request with ability to define number of tries and allowlist (based on exception).
 
-### FailedClient ([file](src/Clients/Failed/FailedClient.php))
-
-> Subject to change.
-
-The FailedClient always fails and throws ClientExceptionInterface. This client could be useful for testing error handling mechanisms in your application.
-
 ### SleepClient ([file](src/Clients/Sleep/SleepClient.php))
 
 The SleepClient allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
+
+### StoreClient ([file](src/Clients/Store/StoreClient.php))
+
+The StoreClient saves request and response, without dependency on PSR-14
+
+- save http file for PHPStorm [SaveForPhpstormRequest.php](src/Requests/SaveForPhpstormRequest.php)
+- save response [SaveResponse.php](src/Responses/SaveResponse.php)
 
 # Write your own client
 
 You can write your own client simply by implementing these interfaces:
 
 - Client must implement `Psr\Http\Client\ClientInterface`. 
-- Config must implement `StrictPhp\HttpClients\Contracts\ConfigContract`
+- Config must implement `StrictPhp\HttpClients\Contracts\ConfigInteface`
 - Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
 
-Below is an example of a implementation:
+Below is an example of an implementation:
+
+## Testing
+
+You can save file with extension *.shttp by [SaveResponse](src/Responses/SaveResponse.php) or use our PSR16 implementation [CachePsr16Service](src/Services/CachePsr16Service.php). This file you can to use in tests by [CustomResponseClient](src/Clients/CustomResponse/CustomResponseClient.php).
+
+```php
+use StrictPhp\HttpClients\Clients\CustomResponse\CustomResponseClient;
+/** @var \Psr\Http\Message\RequestInterface $request */
+$client = new CustomResponseClient(__DIR__ . '/dir/filename.shttp');
+$response = $client->sendRequest($request);
+
+$response instanceof \Psr\Http\Message\ResponseInterface;
+```
 
 ## Config
 
 ```php
 namespace My;
 
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 /**
  * parameters of constructor must have to filled default values  
  */
-class Config implements ConfigContract 
+class Config extends AbstractConfig 
 {
     public function __construct(
         private readonly int $optionA = 1,
@@ -192,13 +208,13 @@ class Config implements ConfigContract
     ) {
     }    
 
-    public function initFromDefaultConfig(ConfigContract $object): void 
+    public function initFromDefaultConfig(ConfigInterface $object): void 
     {
         // if you want to pass an object reference from the default configuration
-        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\Config */
+        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig */
         
         // or empty
-        /** @see \StrictPhp\HttpClients\Clients\Sleep\Config */
+        /** @see \StrictPhp\HttpClients\Clients\Sleep\SleepConfig */
     }
     
 }

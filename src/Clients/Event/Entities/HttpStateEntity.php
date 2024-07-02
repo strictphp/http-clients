@@ -22,16 +22,17 @@ final class HttpStateEntity
 
     public function __construct(
         public readonly RequestInterface $request,
-    )
-    {
+    ) {
         $this->start = Time::seconds();
         $this->id = md5($this->start . $this->request->getUri());
     }
 
     public function finish(): self
     {
-        $this->end = Time::seconds();
-        $this->duration = $this->end - $this->start;
+        if ($this->end === 0.0) {
+            $this->end = Time::seconds();
+            $this->duration = $this->end - $this->start;
+        }
 
         return $this;
     }

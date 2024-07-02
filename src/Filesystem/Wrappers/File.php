@@ -3,19 +3,61 @@
 namespace StrictPhp\HttpClients\Filesystem\Wrappers;
 
 use SplFileObject;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
-final class File implements FileContract
+final class File implements FileInterface
 {
-    private readonly SplFileObject $file;
+    private ?SplFileObject $file = null;
 
-    public function __construct(string $path)
+    public function __construct(
+        private readonly string $path,
+    )
     {
-        $this->file = new SplFileObject($path, 'w');
     }
 
     public function write(string $content): void
     {
-        $this->file->fwrite($content);
+        $this->getFile()
+            ->fwrite($content);
+    }
+
+    public function content(): ?string
+    {
+        $file = $this->readFile();
+        if (! $file instanceof SplFileObject) {
+            return null;
+        }
+
+        $content = $file->fread($file->getSize());
+        if ($content === false) {
+            return null;
+        }
+
+        return $content;
+    }
+
+    public function remove(): void
+    {
+        $file = $this->readFile();
+        if ($file instanceof SplFileObject) {
+            unlink($file->getPathname());
+        }
+    }
+
+    private function getFile(): SplFileObject
+    {
+        if (! $this->file instanceof SplFileObject) {
+            if (is_file($this->path) === false) {
+                touch($this->path);
+            }
+            $this->file = new SplFileObject($this->path, 'r+');
+        }
+
+        return $this->file;
+    }
+
+    private function readFile(): ?SplFileObject
+    {
+        return $this->file ?? (is_file($this->path) ? $this->getFile() : null);
     }
 }

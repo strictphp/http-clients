@@ -24,7 +24,7 @@ final class RetryClient implements ClientInterface
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
+        $config = $this->configManager->get(RetryConfig::class, $request->getUri()->getHost());
         $max = $config->tries - 1;
         for ($i = 0; $i < $config->tries; ++$i) {
             try {

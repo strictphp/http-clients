@@ -4,21 +4,20 @@ namespace StrictPhp\HttpClients\Clients\CacheResponse;
 
 use StrictPhp\HttpClients\Clients\CacheResponse\Actions\CacheKeyMakerAction;
 use StrictPhp\HttpClients\Contracts\CacheKeyMakerActionContract;
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
+use StrictPhp\HttpClients\Entities\AbstractConfig;
 
-final class Config implements ConfigContract
+final class CacheResponseConfig extends AbstractConfig
 {
-    /**
-     * @param int|null $ttl - 0 disable saving, $saveOnly does not work
-     */
     public function __construct(
-        public ?int $ttl = 0,
+        public int $ttl = 0,
         public bool $saveOnly = false,
+        public bool $enabled = true,
         private ?CacheKeyMakerActionContract $cacheKeyMakerAction = null,
     ) {
     }
 
-    public function initFromDefaultConfig(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigInterface $object): void
     {
         $this->cacheKeyMakerAction = $object->getCacheKeyMakerAction();
     }

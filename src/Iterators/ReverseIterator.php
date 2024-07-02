@@ -17,8 +17,7 @@ final class ReverseIterator implements IteratorAggregate
      */
     public function __construct(
         private readonly array $factories,
-    )
-    {
+    ) {
     }
 
     /**

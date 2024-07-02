@@ -18,8 +18,7 @@ final class FactoryToServiceIterator implements IteratorAggregate
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly array $factories,
-    )
-    {
+    ) {
     }
 
     /**

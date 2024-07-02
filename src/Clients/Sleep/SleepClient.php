@@ -25,9 +25,13 @@ final class SleepClient implements ClientInterface
     {
         $host = $request->getUri()
             ->getHost();
-        $config = $this->configManager->get(Config::class, $host);
+        $config = $this->configManager->get(SleepConfig::class, $host);
 
-        if ($config->to > 0 && isset($this->timeout[$host])) {
+        if ($config->enabled === false) {
+            return $this->client->sendRequest($request);
+        }
+
+        if (isset($this->timeout[$host])) {
             $diff = (int) (Time::milli() - $this->timeout[$host]);
             $sleep = random_int($config->from, $config->to);
             Time::sleep($sleep - $diff);
@@ -36,9 +40,7 @@ final class SleepClient implements ClientInterface
         try {
             $response = $this->client->sendRequest($request);
         } finally {
-            if ($config->to > 0) {
-                $this->timeout[$host] = Time::milli();
-            }
+            $this->timeout[$host] = Time::milli();
         }
 
         return $response;
