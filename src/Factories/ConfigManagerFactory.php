@@ -3,11 +3,12 @@
 namespace StrictPhp\HttpClients\Factories;
 
 use Generator;
-use StrictPhp\HttpClients\Clients\CacheResponse\Config as CacheResponseConfig;
-use StrictPhp\HttpClients\Clients\CustomizeRequest\Config as CustomizeRequestConfig;
-use StrictPhp\HttpClients\Clients\Retry\Config as RetryConfig;
-use StrictPhp\HttpClients\Clients\Sleep\Config as SleepConfig;
-use StrictPhp\HttpClients\Clients\Store\Config as StoreConfig;
+use StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig;
+use StrictPhp\HttpClients\Clients\CustomizeRequest\CustomizeRequestConfig;
+use StrictPhp\HttpClients\Clients\Event\EventConfig;
+use StrictPhp\HttpClients\Clients\Retry\RetryConfig;
+use StrictPhp\HttpClients\Clients\Sleep\SleepConfig;
+use StrictPhp\HttpClients\Clients\Store\StoreConfig;
 use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
@@ -31,6 +32,7 @@ final class ConfigManagerFactory
         $this->configAliases = $configAliases + [
             'cacheResponse' => CacheResponseConfig::class,
             'customizeRequest' => CustomizeRequestConfig::class,
+            'event' => EventConfig::class,
             'retry' => RetryConfig::class,
             'sleep' => SleepConfig::class,
             'store' => StoreConfig::class,

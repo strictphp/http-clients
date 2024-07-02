@@ -25,7 +25,7 @@ final class SleepClient implements ClientInterface
     {
         $host = $request->getUri()
             ->getHost();
-        $config = $this->configManager->get(Config::class, $host);
+        $config = $this->configManager->get(SleepConfig::class, $host);
 
         if ($config->enabled === false) {
             return $this->client->sendRequest($request);

@@ -23,7 +23,7 @@ final class StoreClient implements ClientInterface
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
+        $config = $this->configManager->get(StoreConfig::class, $request->getUri()->getHost());
 
         if ($config->enabled === false) {
             return $this->client->sendRequest($request);

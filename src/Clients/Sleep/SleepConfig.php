@@ -6,7 +6,7 @@ use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 
-final class Config extends AbstractConfig
+final class SleepConfig extends AbstractConfig
 {
     /**
      * @param int<1, max> $from milliseconds

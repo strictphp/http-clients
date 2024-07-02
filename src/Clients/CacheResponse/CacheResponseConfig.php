@@ -7,7 +7,7 @@ use StrictPhp\HttpClients\Contracts\CacheKeyMakerActionContract;
 use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
-final class Config extends AbstractConfig
+final class CacheResponseConfig extends AbstractConfig
 {
     public function __construct(
         public int $ttl = 0,

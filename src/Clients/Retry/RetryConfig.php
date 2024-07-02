@@ -7,7 +7,7 @@ use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 use Throwable;
 
-final class Config extends AbstractConfig
+final class RetryConfig extends AbstractConfig
 {
     /**
      * @var callable(Throwable): bool

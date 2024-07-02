@@ -77,7 +77,7 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
 
 // set up for SleepClient
-$config = new Sleep\Config(1000, 2000);
+$config = new Sleep\SleepConfig(1000, 2000);
 
 /** @var ConfigManager $configManager */
 $configManager->addDefault($config);
@@ -90,7 +90,7 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Clients\Sleep;
 
 // set up for SleepClient
-$config = new Sleep\Config(1000, 2000);
+$config = new Sleep\SleepConfig(1000, 2000);
 
 /** @var ConfigManager $configManager */
 $configManager->add('strictphp.com', $config);
@@ -131,11 +131,11 @@ You can throw ClientExceptionInterface. This client could be useful for testing 
 
 ```php
 use Psr\Http\Message\RequestInterface;
-use StrictPhp\HttpClients\Clients\CustomizeRequest\Config;
+use StrictPhp\HttpClients\Clients\CustomizeRequest\CustomizeRequestConfig;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
 /** @var ConfigManager $configManager */
-$configManager->add('www.example.com', new Config(function(RequestInterface $request): RequestInterface {
+$configManager->add('www.example.com', new CustomizeRequestConfig(function(RequestInterface $request): RequestInterface {
     return $request->withHeader('uuid', generate_uuid());
 }));
 ```
@@ -211,10 +211,10 @@ class Config extends AbstractConfig
     public function initFromDefaultConfig(ConfigInterface $object): void 
     {
         // if you want to pass an object reference from the default configuration
-        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\Config */
+        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig */
         
         // or empty
-        /** @see \StrictPhp\HttpClients\Clients\Sleep\Config */
+        /** @see \StrictPhp\HttpClients\Clients\Sleep\SleepConfig */
     }
     
 }
