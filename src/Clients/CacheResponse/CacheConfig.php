@@ -4,7 +4,7 @@ namespace StrictPhp\HttpClients\Clients\CacheResponse;
 
 use StrictPhp\HttpClients\Clients\CacheResponse\Actions\CacheKeyMakerAction;
 use StrictPhp\HttpClients\Contracts\CacheKeyMakerActionContract;
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 final class Config extends AbstractConfig
@@ -17,7 +17,7 @@ final class Config extends AbstractConfig
     ) {
     }
 
-    public function initFromDefaultConfig(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigInterface $object): void
     {
         $this->cacheKeyMakerAction = $object->getCacheKeyMakerAction();
     }

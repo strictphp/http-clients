@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Clients\Retry;
 
 use Psr\Http\Client\ClientExceptionInterface;
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 use Throwable;
 
@@ -27,7 +27,7 @@ final class Config extends AbstractConfig
         ): bool => $e instanceof ClientExceptionInterface;
     }
 
-    public function initFromDefaultConfig(ConfigContract $object): void
+    public function initFromDefaultConfig(ConfigInterface $object): void
     {
         // intentionally empty
     }

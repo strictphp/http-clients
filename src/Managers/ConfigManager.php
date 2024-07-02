@@ -2,15 +2,15 @@
 
 namespace StrictPhp\HttpClients\Managers;
 
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 use StrictPhp\HttpClients\Helpers\Host;
 
 final class ConfigManager
 {
     /**
-     * @param array<string, array<class-string<ConfigContract>, ConfigContract>> $configs
-     * @param array<class-string<ConfigContract>, ConfigContract> $defaults
+     * @param array<string, array<class-string<ConfigInterface>, ConfigInterface>> $configs
+     * @param array<class-string<ConfigInterface>, ConfigInterface> $defaults
      */
     public function __construct(
         private array $configs = [],
@@ -19,9 +19,9 @@ final class ConfigManager
     }
 
     /**
-     * @param ConfigContract|iterable<ConfigContract> $configs
+     * @param ConfigInterface|iterable<ConfigInterface> $configs
      */
-    public function add(string $host, ConfigContract|iterable $configs): void
+    public function add(string $host, ConfigInterface|iterable $configs): void
     {
         if (is_iterable($configs)) {
             foreach ($configs as $config) {
@@ -34,9 +34,9 @@ final class ConfigManager
     }
 
     /**
-     * @param ConfigContract|iterable<ConfigContract> $configs
+     * @param ConfigInterface|iterable<ConfigInterface> $configs
      */
-    public function addDefault(ConfigContract|iterable $configs): void
+    public function addDefault(ConfigInterface|iterable $configs): void
     {
         if (is_iterable($configs)) {
             foreach ($configs as $config) {
@@ -51,12 +51,12 @@ final class ConfigManager
     }
 
     /**
-     * @template T of ConfigContract
+     * @template T of ConfigInterface
      * @param class-string<T> $class
      *
      * @return T
      */
-    public function get(string $class, string $host): ConfigContract
+    public function get(string $class, string $host): ConfigInterface
     {
         $config = $this->configs[$host][$class]
             ?? $this->configs[Host::allSubdomains($host)][$class]
@@ -67,9 +67,9 @@ final class ConfigManager
     }
 
     /**
-     * @param class-string<ConfigContract> $class
+     * @param class-string<ConfigInterface> $class
      */
-    private function getDefault(string $class): ConfigContract
+    private function getDefault(string $class): ConfigInterface
     {
         if ($this->defaultExists($class) === false) {
             $this->forceDefault(new $class());
@@ -78,13 +78,13 @@ final class ConfigManager
         return $this->defaults[$class];
     }
 
-    private function forceDefault(ConfigContract $config): void
+    private function forceDefault(ConfigInterface $config): void
     {
         $this->defaults[$config::class] = $config;
     }
 
     /**
-     * @param class-string<ConfigContract> $class
+     * @param class-string<ConfigInterface> $class
      */
     private function defaultExists(string $class): bool
     {

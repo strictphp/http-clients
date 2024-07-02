@@ -2,9 +2,9 @@
 
 namespace StrictPhp\HttpClients\Entities;
 
-use StrictPhp\HttpClients\Contracts\ConfigContract;
+use StrictPhp\HttpClients\Contracts\ConfigInterface;
 
-abstract class AbstractConfig implements ConfigContract
+abstract class AbstractConfig implements ConfigInterface
 {
     public static function __set_state(array $an_array): object
     {
