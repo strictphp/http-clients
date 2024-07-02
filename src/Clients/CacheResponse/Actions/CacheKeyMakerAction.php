@@ -11,6 +11,7 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
     {
         $headers = $request->getHeaders();
         $body = $request->getBody();
+        $uri = $request->getUri();
 
         foreach (array_keys($headers) as $name) {
             if (str_starts_with(strtolower($name), 'x-')) {
@@ -18,12 +19,12 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
             }
         }
 
-        return sha1((string) json_encode([
+        return $uri->getHost() . '/' . sha1((string) json_encode([
             $request->getMethod(),
             $request->getProtocolVersion(),
             $headers,
             (string) $body,
-            (string) $request->getUri(),
+            (string) $uri,
         ]));
     }
 }
