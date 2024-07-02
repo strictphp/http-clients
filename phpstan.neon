@@ -2,6 +2,7 @@ parameters:
 	level: max
 	paths:
 		- src
+		- tests
 		- ecs.php
 		- rector.php
 	ignoreErrors:
