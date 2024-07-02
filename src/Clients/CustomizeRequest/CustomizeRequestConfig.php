@@ -6,7 +6,7 @@ use Psr\Http\Message\RequestInterface;
 use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
-final class Config extends AbstractConfig
+final class CustomizeRequestConfig extends AbstractConfig
 {
     /**
      * @readonly

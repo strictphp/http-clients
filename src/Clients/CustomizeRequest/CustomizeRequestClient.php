@@ -17,7 +17,7 @@ final class CustomizeRequestClient implements ClientInterface
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $config = $this->configManager->get(Config::class, $request->getUri()->getHost());
+        $config = $this->configManager->get(CustomizeRequestConfig::class, $request->getUri()->getHost());
         return $this->client->sendRequest(($config->callback)($request));
     }
 }
