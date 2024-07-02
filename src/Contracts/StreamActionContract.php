@@ -3,9 +3,9 @@
 namespace StrictPhp\HttpClients\Contracts;
 
 use Psr\Http\Message\StreamInterface;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
 interface StreamActionContract
 {
-    public function execute(StreamInterface $stream, FileContract $file, int $buffer): void;
+    public function execute(StreamInterface $stream, FileInterface $file, int $buffer): void;
 }

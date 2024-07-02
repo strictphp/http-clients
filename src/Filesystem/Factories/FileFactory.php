@@ -4,8 +4,8 @@ namespace StrictPhp\HttpClients\Filesystem\Factories;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 use StrictPhp\HttpClients\Filesystem\Wrappers\File;
 
 final class FileFactory implements FileFactoryContract
@@ -15,7 +15,7 @@ final class FileFactory implements FileFactoryContract
     ) {
     }
 
-    public function create(FileInfoEntity $file, string $suffix = ''): FileContract
+    public function create(FileInfoEntity $file, string $suffix = ''): FileInterface
     {
         $this->filesystem->makeDirectory($file->path);
 

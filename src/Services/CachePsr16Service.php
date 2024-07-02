@@ -6,8 +6,8 @@ use DateInterval;
 use Exception;
 use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
+use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
 final class CachePsr16Service implements CacheInterface
 {
@@ -71,7 +71,7 @@ final class CachePsr16Service implements CacheInterface
         throw new Exception('not implemented');
     }
 
-    private function createFileInfoEntity(string $key): FileContract
+    private function createFileInfoEntity(string $key): FileInterface
     {
         $subDir = implode('/', array_slice(str_split($key, 2), 0, 2));
         $fileInfo = new FileInfoEntity($this->tempDir . '/' . $subDir, $key);

@@ -6,5 +6,5 @@ use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
 
 interface FileFactoryContract
 {
-    public function create(FileInfoEntity $file, string $suffix = ''): FileContract;
+    public function create(FileInfoEntity $file, string $suffix = ''): FileInterface;
 }
