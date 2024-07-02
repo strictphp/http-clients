@@ -73,8 +73,18 @@ final class CachePsr16Service implements CacheInterface
 
     private function createFileInfoEntity(string $key): FileInterface
     {
-        $subDir = implode('/', array_slice(str_split($key, 2), 0, 2));
-        $fileInfo = new FileInfoEntity($this->tempDir . '/' . $subDir, $key);
+        preg_match('~^(?<path>.+/)(?<filename>.+)$~', $key, $path);
+
+        if (isset($path['filename'], $path['path'])) {
+            $subDir = $path['path'];
+            $fileName = $path['filename'];
+        } else {
+            $subDir = '';
+            $fileName = $key;
+        }
+
+        $subDir .= substr($fileName, 0, 2);
+        $fileInfo = new FileInfoEntity($this->tempDir . '/' . $subDir, $fileName);
 
         return $this->fileFactory->create($fileInfo, '.shttp');
     }
