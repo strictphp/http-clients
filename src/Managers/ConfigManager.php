@@ -58,10 +58,11 @@ final class ConfigManager
      */
     public function get(string $class, string $host): ConfigInterface
     {
+        assert($host !== '');
         $config = $this->configs[$host][$class]
             ?? $this->configs[Host::allSubdomains($host)][$class]
             ?? $this->getDefault($class);
-        assert(is_a($config, $class));
+        assert($config instanceof $class);
 
         return $config;
     }
