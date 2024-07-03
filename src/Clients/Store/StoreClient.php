@@ -33,13 +33,17 @@ final class StoreClient implements ClientInterface
         try {
             $response = $this->client->sendRequest($request);
         } catch (Throwable $throwable) {
-            $failed = new FailedRequestEvent($state->finish(), $throwable);
-            $this->saveForPhpstormRequest->save($failed);
+            if ($config->onFail) {
+                $failed = new FailedRequestEvent($state->finish(), $throwable);
+                $this->saveForPhpstormRequest->save($failed);
+            }
             throw $throwable;
         }
 
-        $success = new SuccessRequestEvent($state->finish(), $response);
-        $this->saveForPhpstormRequest->save($success, $response, $config->serialized);
+        if ($config->onSuccess) {
+            $success = new SuccessRequestEvent($state->finish(), $response);
+            $this->saveForPhpstormRequest->save($success, $response, $config->serialized);
+        }
 
         return $response;
     }

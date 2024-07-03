@@ -10,6 +10,8 @@ final class StoreConfig extends AbstractConfig
     public function __construct(
         public bool $enabled = true,
         public bool $serialized = true,
+        public bool $onFail = true,
+        public bool $onSuccess = true,
     )
     {
     }
