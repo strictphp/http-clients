@@ -11,8 +11,7 @@ final class File implements FileInterface
 
     public function __construct(
         private readonly string $pathname,
-    )
-    {
+    ) {
     }
 
     public function write(string $content): void
@@ -25,6 +24,9 @@ final class File implements FileInterface
     {
         $file = $this->readFile();
         if (! $file instanceof SplFileObject) {
+            return null;
+        } elseif ($file->getMTime() !== $file->getCTime() && $file->getMTime() < time()) {
+            $this->remove();
             return null;
         }
 
@@ -41,12 +43,16 @@ final class File implements FileInterface
         $file = $this->readFile();
         if ($file instanceof SplFileObject) {
             unlink($file->getPathname());
+            $this->file = null;
         }
     }
 
-    public function pathname(): string
+    public function setTtl(?int $ttlToSeconds): void
     {
-        return $this->pathname;
+        /** @var int $ctime - file exists! */
+        $ctime = $this->getFile()
+            ->getCTime();
+        touch($this->pathname, $ctime + (int) $ttlToSeconds);
     }
 
     private function getFile(): SplFileObject
