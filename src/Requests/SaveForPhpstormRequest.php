@@ -31,9 +31,9 @@ final class SaveForPhpstormRequest
     public function save(
         AbstractCompleteRequestEvent $event,
         ?ResponseInterface $response = null,
-        ?bool $serialized = null,
+        bool $serialized = false,
     ): void {
-        $file = $this->fileFactory->create($this->makePathAction->execute($event, 'Q.http'));
+        $file = $this->fileFactory->create($this->makePathAction->execute($event, 'REQ.http'));
         $file->write('### Duration: ' . $event->duration . Headers::Eol);
         $file->write($event->request->getMethod() . ' ' . $event->request->getUri() . Headers::Eol);
         foreach (Headers::toIterable($event->request->getHeaders()) as $header) {
