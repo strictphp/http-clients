@@ -24,24 +24,20 @@ final class SaveResponse
         private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
         private readonly StreamActionContract $streamAction,
         private readonly int $bufferSize = 8192,
-        private readonly ?bool $serialized = null,
     ) {
     }
 
     public function save(
         AbstractCompleteRequestEvent $event,
         ResponseInterface $response,
-        ?bool $serialized = null,
+        bool $serialized = false,
     ): void {
-        $serialized ??= $this->serialized;
+        $code = $response->getStatusCode();
+        $fileInfo = $this->makePathAction->execute($event, sprintf('RES.%d.', $code));
 
-        $fileInfo = $this->makePathAction->execute($event, 'S.');
+        $this->headersAndBody($fileInfo, $event->duration, $response);
 
-        if ($serialized === null || $serialized === false) {
-            $this->headersAndBody($fileInfo, $event->duration, $response);
-        }
-
-        if ($serialized === null || $serialized) {
+        if ($serialized) {
             $this->serialized($fileInfo, $response);
         }
     }

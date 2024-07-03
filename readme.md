@@ -10,7 +10,7 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
 - **[RetryClient](#retryclient-file)**: If the call sendRequest throw exception, it tries to send request once more.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
-- **[StoreClient](#storeclient-file)**: Save your re**Q**uests as PHPStorm `Q.http` file and corresponding re**S**ponse as a file with suffix `S.[headers|xml|txt|json|html|pdf]`.
+- **[StoreClient](#storeclient-file)**: Save your **REQ**uests as PHPStorm `REQ.http` file and corresponding **RES**ponse as a file with suffix `RES.<code>.[headers|xml|txt|json|html|pdf]`.
 
 ## Installation
 
