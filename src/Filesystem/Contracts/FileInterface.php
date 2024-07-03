@@ -9,4 +9,6 @@ interface FileInterface
     public function content(): ?string;
 
     public function remove(): void;
+
+    public function pathname(): string;
 }

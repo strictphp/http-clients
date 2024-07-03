@@ -10,7 +10,7 @@ final class File implements FileInterface
     private ?SplFileObject $file = null;
 
     public function __construct(
-        private readonly string $path,
+        private readonly string $pathname,
     )
     {
     }
@@ -44,13 +44,18 @@ final class File implements FileInterface
         }
     }
 
+    public function pathname(): string
+    {
+        return $this->pathname;
+    }
+
     private function getFile(): SplFileObject
     {
         if (! $this->file instanceof SplFileObject) {
-            if (is_file($this->path) === false) {
-                touch($this->path);
+            if (is_file($this->pathname) === false) {
+                touch($this->pathname);
             }
-            $this->file = new SplFileObject($this->path, 'r+');
+            $this->file = new SplFileObject($this->pathname, 'r+');
         }
 
         return $this->file;
@@ -58,6 +63,6 @@ final class File implements FileInterface
 
     private function readFile(): ?SplFileObject
     {
-        return $this->file ?? (is_file($this->path) ? $this->getFile() : null);
+        return $this->file ?? (is_file($this->pathname) ? $this->getFile() : null);
     }
 }
