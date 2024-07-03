@@ -2,7 +2,7 @@
 
 namespace StrictPhp\HttpClients\Filesystem\Contracts;
 
-use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
+use StrictPhp\HttpClients\Entities\FileInfoEntity;
 
 interface FileFactoryContract
 {

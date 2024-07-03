@@ -2,9 +2,9 @@
 
 namespace StrictPhp\HttpClients\Clients\Event\Actions;
 
-use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\AbstractRequestEvent;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
+use StrictPhp\HttpClients\Entities\FileInfoEntity;
 
 final class MakePathAction implements MakePathActionContract
 {

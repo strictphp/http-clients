@@ -3,12 +3,12 @@
 namespace StrictPhp\HttpClients\Responses;
 
 use Psr\Http\Message\ResponseInterface;
-use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\AbstractCompleteRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
+use StrictPhp\HttpClients\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Helpers\Headers;
 

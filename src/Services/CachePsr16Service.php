@@ -5,7 +5,7 @@ namespace StrictPhp\HttpClients\Services;
 use DateInterval;
 use Exception;
 use Psr\SimpleCache\CacheInterface;
-use StrictPhp\HttpClients\Clients\Event\Entities\FileInfoEntity;
+use StrictPhp\HttpClients\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 

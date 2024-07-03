@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StrictPhp\HttpClients\Clients\Event\Entities;
+namespace StrictPhp\HttpClients\Entities;
 
 final class FileInfoEntity
 {
