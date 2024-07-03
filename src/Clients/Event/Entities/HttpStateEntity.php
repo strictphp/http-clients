@@ -24,7 +24,7 @@ final class HttpStateEntity
         public readonly RequestInterface $request,
     ) {
         $this->start = Time::seconds();
-        $this->id = md5($this->start . $this->request->getUri());
+        $this->id = substr(md5($this->start . $this->request->getUri()), 0, 16);
     }
 
     public function finish(): self
