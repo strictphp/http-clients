@@ -10,5 +10,5 @@ interface FileInterface
 
     public function remove(): void;
 
-    public function pathname(): string;
+    public function setTtl(?int $ttlToSeconds): void;
 }

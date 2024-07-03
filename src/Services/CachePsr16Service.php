@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
+use StrictPhp\HttpClients\Helpers\Time;
 
 final class CachePsr16Service implements CacheInterface
 {
@@ -29,8 +30,9 @@ final class CachePsr16Service implements CacheInterface
     public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
         assert(is_string($value));
-        $this->createFileInfoEntity($key)
-            ->write($value);
+        $file = $this->createFileInfoEntity($key);
+        $file->write($value);
+        $file->setTtl(Time::ttlToSeconds($ttl));
 
         return true;
     }

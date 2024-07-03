@@ -14,7 +14,7 @@ final class FilesystemService implements Filesystem
 
     public function path($path)
     {
-        return $this->dir . '/' . $path;
+        return $this->dir . $path;
     }
 
     public function makeDirectory($path)
