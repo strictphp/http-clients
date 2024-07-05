@@ -10,6 +10,7 @@ use StrictPhp\HttpClients\Clients\Event\Entities\HttpStateEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\BeforeRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\FailedRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
+use StrictPhp\HttpClients\Clients\Event\Exceptions\SuccessRequestEventExceptionInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use Throwable;
 
@@ -35,6 +36,9 @@ final class EventClient implements ClientInterface
         $this->eventDispatcher->dispatch(new BeforeRequestEvent($httpState));
         try {
             $response = $this->client->sendRequest($request);
+        } catch (SuccessRequestEventExceptionInterface $exception){
+            $this->eventDispatcher->dispatch(new SuccessRequestEvent($httpState->finish(), $exception->getResponse()));
+            throw $exception;
         } catch (Throwable $throwable) {
             $this->eventDispatcher->dispatch(new FailedRequestEvent($httpState->finish(), $throwable));
             throw $throwable;
