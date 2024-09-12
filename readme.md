@@ -110,6 +110,7 @@ The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, imp
 - **Development Efficiency**: Speeds up development by caching responses, reducing the need for repeated API calls during development.
 - **Local Testing**: Enable the `saveOnly` option in production to cache responses and download them for testing on localhost, ensuring consistency and performance.
 - **Customization**: Customize cache key preparation by implementing your own contract in [CacheKeyMakerAction.php](src/Actions/CacheKeyMakerAction.php).
+- if you want to use the exist file from server on localhost, you must set mtime same as ctime by command `touch -m 5a...41.shttp`
 
 ### CustomResponseClient ([file](src/Clients/CustomResponse/CustomResponseClient.php))
 

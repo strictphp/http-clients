@@ -3,6 +3,7 @@
 namespace StrictPhp\HttpClients\Responses;
 
 use GuzzleHttp\Psr7\Utils;
+use h4kuna\Serialize\Serialize;
 use Psr\Http\Message\ResponseInterface;
 use Serializable;
 use StrictPhp\HttpClients\Helpers\Stream;
@@ -58,13 +59,13 @@ final class SerializableResponse implements Serializable, Stringable
     public function unserialize(string $data): void
     {
         /** @var SerializeType $responseData */
-        $responseData = unserialize($data);
+        $responseData = Serialize::decode($data, self::class);
 
         $this->__unserialize($responseData);
     }
 
     public function serialize(): ?string
     {
-        return serialize($this->__serialize());
+        return Serialize::encode($this->__serialize(), self::class);
     }
 }

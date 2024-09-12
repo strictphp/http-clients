@@ -2,11 +2,12 @@
 
 namespace StrictPhp\HttpClients\Services;
 
+use h4kuna\Serialize\Serialize;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Responses\SerializableResponse;
 
-class CacheRequestService
+final class CacheRequestService
 {
     public function __construct(
         private readonly CacheInterface $cache,
@@ -24,7 +25,7 @@ class CacheRequestService
             return null;
         }
 
-        $response = $this->unserialize($data);
+        $response = Serialize::decode($data, self::class);
         if ($response instanceof SerializableResponse) {
             return $response->response;
         }
@@ -36,16 +37,6 @@ class CacheRequestService
 
     public function store(string $key, ResponseInterface $response, ?int $ttl): void
     {
-        $this->cache->set($key, $this->serialize(new SerializableResponse($response)), $ttl);
-    }
-
-    protected function unserialize(string $data): mixed
-    {
-        return @unserialize($data);
-    }
-
-    protected function serialize(mixed $data): string
-    {
-        return serialize($data);
+        $this->cache->set($key, Serialize::encode(new SerializableResponse($response), self::class), $ttl);
     }
 }
