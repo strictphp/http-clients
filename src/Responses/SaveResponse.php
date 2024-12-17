@@ -52,7 +52,7 @@ final class SaveResponse
     {
         $file = $this->fileFactory->create($fileInfo, 'shttp');
 
-        $file->write((string) (new SerializableResponse($response)));
+        $file->write(serialize((new SerializableResponse($response))));
     }
 
     private function headers(FileInfoEntity $fileInfo, float $duration, ResponseInterface $response): void
