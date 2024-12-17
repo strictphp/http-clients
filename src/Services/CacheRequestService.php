@@ -15,17 +15,11 @@ class CacheRequestService
 
     public function restore(string $key): ?ResponseInterface
     {
-        $data = $this->cache->get($key);
+        $response = $this->cache->get($key);
 
-        if ($data === null) {
+        if ($response === null) {
             return null;
-        } elseif (is_string($data) === false) {
-            $this->cache->delete($key);
-            return null;
-        }
-
-        $response = $this->unserialize($data);
-        if ($response instanceof SerializableResponse) {
+        } elseif ($response instanceof SerializableResponse) {
             return $response->response;
         }
 
@@ -36,16 +30,6 @@ class CacheRequestService
 
     public function store(string $key, ResponseInterface $response, ?int $ttl): void
     {
-        $this->cache->set($key, $this->serialize(new SerializableResponse($response)), $ttl);
-    }
-
-    protected function unserialize(string $data): mixed
-    {
-        return @unserialize($data);
-    }
-
-    protected function serialize(mixed $data): string
-    {
-        return serialize($data);
+        $this->cache->set($key, new SerializableResponse($response), $ttl);
     }
 }

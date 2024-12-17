@@ -18,20 +18,18 @@ final class CachePsr16Service implements CacheInterface
     ) {
     }
 
-    /**
-     * @return ?string
-     */
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->createFileInfoEntity($key)
+        $content = $this->createFileInfoEntity($key)
             ->content();
+
+        return $content === null ? $default : @unserialize($content);
     }
 
     public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
-        assert(is_string($value));
         $file = $this->createFileInfoEntity($key);
-        $file->write($value);
+        $file->write(serialize($value));
         $file->setTtl(Time::ttlToSeconds($ttl));
 
         return true;
