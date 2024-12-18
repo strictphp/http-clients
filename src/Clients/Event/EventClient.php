@@ -36,8 +36,8 @@ final class EventClient implements ClientInterface
         $this->eventDispatcher->dispatch(new BeforeRequestEvent($httpState));
         try {
             $response = $this->client->sendRequest($request);
-        } catch (SuccessRequestEventExceptionInterface $exception){
-            $this->eventDispatcher->dispatch(new SuccessRequestEvent($httpState->finish(), $exception->getResponse()));
+        } catch (SuccessRequestEventExceptionInterface $exception) {
+            $this->success($httpState, $exception->getResponse());
             throw $exception;
         } catch (Throwable $throwable) {
             $this->eventDispatcher->dispatch(new FailedRequestEvent($httpState->finish(), $throwable));
@@ -45,8 +45,13 @@ final class EventClient implements ClientInterface
         }
 
         // keep out of try-catch block
-        $this->eventDispatcher->dispatch(new SuccessRequestEvent($httpState->finish(), $response));
+        $this->success($httpState, $response);
 
         return $response;
+    }
+
+    private function success(HttpStateEntity $httpState, ResponseInterface $response): void
+    {
+        $this->eventDispatcher->dispatch(new SuccessRequestEvent($httpState->finish(), $response));
     }
 }

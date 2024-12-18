@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Clients\Event\Entities\HttpStateEntity;
 use StrictPhp\HttpClients\Clients\Event\Events\FailedRequestEvent;
 use StrictPhp\HttpClients\Clients\Event\Events\SuccessRequestEvent;
+use StrictPhp\HttpClients\Clients\Event\Exceptions\SuccessRequestEventExceptionInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use Throwable;
@@ -32,6 +33,9 @@ final class StoreClient implements ClientInterface
         $state = new HttpStateEntity($request);
         try {
             $response = $this->client->sendRequest($request);
+        } catch (SuccessRequestEventExceptionInterface $exception) {
+            $this->success($config, $state, $exception->getResponse());
+            throw $exception;
         } catch (Throwable $throwable) {
             if ($config->onFail) {
                 $failed = new FailedRequestEvent($state->finish(), $throwable);
@@ -40,11 +44,18 @@ final class StoreClient implements ClientInterface
             throw $throwable;
         }
 
-        if ($config->onSuccess) {
-            $success = new SuccessRequestEvent($state->finish(), $response);
-            $this->saveForPhpstormRequest->save($success, $response, $config->serialized);
-        }
+        $this->success($config, $state, $response);
 
         return $response;
+    }
+
+    private function success(StoreConfig $config, HttpStateEntity $state, ResponseInterface $response): void
+    {
+        if ($config->onSuccess === false) {
+            return;
+        }
+
+        $success = new SuccessRequestEvent($state->finish(), $response);
+        $this->saveForPhpstormRequest->save($success, $response, $config->serialized);
     }
 }
