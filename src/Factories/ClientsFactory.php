@@ -3,6 +3,7 @@
 namespace StrictPhp\HttpClients\Factories;
 
 use Psr\Http\Client\ClientInterface;
+use StrictPhp\HttpClients\Clients\MainHttp\MainHttpClient;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Contracts\ClientsFactoryContract;
 
@@ -24,6 +25,6 @@ final class ClientsFactory implements ClientsFactoryContract
             $client = $factory->create($client);
         }
 
-        return $client;
+        return new MainHttpClient($client);
     }
 }

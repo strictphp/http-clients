@@ -103,6 +103,10 @@ $configManager->add('strictphp.com', $config);
 - Each client can be built using its own Factory class (in their namespace). Factory uses a DI container that should resolve: ClientInterface for HTTP/s communication and ConfigManaer
 - Each client can be configured by ConfigManager.
 
+### MainHttpClient ([file](src/Clients/MainHttp/MainHttpClient.php))
+
+This is first endpoint for debugging. If you use [ClientsFactory](src/Factories/ClientsFactory.php), this instance will be returned.
+
 ### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
 
 The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests. Here are some benefits and considerations:
