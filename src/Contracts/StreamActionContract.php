@@ -7,5 +7,8 @@ use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
 
 interface StreamActionContract
 {
-    public function execute(StreamInterface $stream, FileInterface $file, int $buffer): void;
+    /**
+     * @param positive-int|null $buffer
+     */
+    public function execute(StreamInterface $stream, FileInterface $file, ?int $buffer = null): void;
 }

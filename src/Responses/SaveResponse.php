@@ -18,12 +18,15 @@ use StrictPhp\HttpClients\Helpers\Headers;
  */
 final class SaveResponse
 {
+    /**
+     * @param positive-int|null $bufferSize
+     */
     public function __construct(
         private readonly FileFactoryContract $fileFactory,
         private readonly MakePathActionContract $makePathAction,
         private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
         private readonly StreamActionContract $streamAction,
-        private readonly int $bufferSize = 8192,
+        private readonly ?int $bufferSize = null,
     ) {
     }
 

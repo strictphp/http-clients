@@ -19,12 +19,15 @@ use StrictPhp\HttpClients\Responses\SaveResponse;
  */
 final class SaveForPhpstormRequest
 {
+    /**
+     * @param positive-int|null $bufferSize
+     */
     public function __construct(
         private readonly FileFactoryContract $fileFactory,
         private readonly MakePathActionContract $makePathAction,
         private readonly SaveResponse $saveResponse,
         private readonly StreamActionContract $streamAction,
-        private readonly int $bufferSize = 8192,
+        private readonly ?int $bufferSize = null,
     ) {
     }
 

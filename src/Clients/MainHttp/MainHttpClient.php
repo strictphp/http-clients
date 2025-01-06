@@ -8,7 +8,9 @@ use Psr\Http\Message\ResponseInterface;
 
 final class MainHttpClient implements ClientInterface
 {
-    public function __construct(private readonly ClientInterface $client)
+    public function __construct(
+        private readonly ClientInterface $client,
+    )
     {
     }
 
