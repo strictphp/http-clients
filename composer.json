@@ -43,7 +43,8 @@
     "analyse": "./vendor/bin/phpstan",
     "check": [
       "@lint",
-      "@analyse"
+      "@analyse",
+      "@test"
     ],
     "lint": [
       "@lint:fix",
