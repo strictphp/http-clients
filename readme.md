@@ -12,6 +12,9 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
 - **[StoreClient](#storeclient-file)**: Save your **REQ**uests as PHPStorm `REQ.http` file and corresponding **RES**ponse as a file with suffix `RES.<code>.[headers|xml|txt|json|html|pdf]`.
 
+## Integration
+- [Nette en](src/Nette/readme.md), [Nette czech](src/Nette/readme-cs.md)
+
 ## Installation
 
 You can install the HTTP Clients package via Composer:
