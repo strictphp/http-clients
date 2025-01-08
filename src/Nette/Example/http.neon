@@ -1,0 +1,28 @@
+parameters:
+	logDir: %tempDir%/log
+
+extensions:
+	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpExtension(%tempDir%, %logDir%)
+
+services:
+	- GuzzleHttp\Psr7\HttpFactory
+
+	psrHttp.main.client: GuzzleHttp\Client([timeout: 5.0]) # or other PSR-18 client
+	psrHttp.middlewares:
+		arguments:
+			factories: # the order is important, you can remove or add any middleware or change order
+				- @psrHttp.middleware.cacheResponse
+				- @psrHttp.middleware.retry
+				- @psrHttp.middleware.sleep
+				- @psrHttp.middleware.store
+				# - @psrHttp.middleware.event # implement PSR-14, this can replace psrHttp.middleware.store
+	psrHttp.config.manager:
+		setup:
+			# addDefault is common for all hosts
+			- addDefault(StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig(604000, saveOnly: true))
+			- addDefault(StrictPhp\HttpClients\Clients\Store\StoreConfig(serialized: false, onSuccess: false))
+			# cofig for current host, rewrite default config
+			- add('www.cnb.cz', [
+				StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig(60, saveOnly: false),
+				StrictPhp\HttpClients\Clients\Store\StoreConfig(serialized: false, onSuccess: true), # save every request on success for this host, this not recomended on production
+			])
