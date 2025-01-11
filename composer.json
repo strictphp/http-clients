@@ -45,6 +45,7 @@
   "scripts": {
     "analyse": "./vendor/bin/phpstan",
     "check": [
+      "rm -rf tests/temp/*",
       "@lint",
       "@analyse",
       "@test"

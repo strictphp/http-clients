@@ -2,25 +2,20 @@
 
 namespace StrictPhp\HttpClients\Clients\CustomResponse;
 
-use Closure;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
-use StrictPhp\HttpClients\Services\CacheRequestService;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 
-/**
- * Use as last middleware
- */
 final class CustomResponseClientFactory implements ClientFactoryContract
 {
     public function __construct(
-        private readonly string|ResponseInterface|Closure|CacheRequestService $content,
-    )
-    {
+        private readonly ClientInterface $client,
+        private readonly ConfigManager $configManager,
+    ) {
     }
 
     public function create(ClientInterface $client): ClientInterface
     {
-        return new CustomResponseClient($this->content);
+        return new CustomResponseClient($this->client, $this->configManager);
     }
 }
