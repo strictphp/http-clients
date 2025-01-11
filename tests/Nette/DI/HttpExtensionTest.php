@@ -58,6 +58,7 @@ final class HttpExtensionTest extends TestCase
                         '@psrHttp.middleware.sleep',
                         '@psrHttp.middleware.store',
                         '@psrHttp.middleware.event',
+                        '@psrHttp.middleware.customResponse',
                     ],
                 ],
             ],

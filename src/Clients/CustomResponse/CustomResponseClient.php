@@ -2,35 +2,38 @@
 
 namespace StrictPhp\HttpClients\Clients\CustomResponse;
 
-use Closure;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\LoadCustomFileService;
 
 class CustomResponseClient implements ClientInterface
 {
-    /**
-     * @param string|ResponseInterface|CacheRequestService|Closure(): ResponseInterface $content
-     */
     public function __construct(
-        private readonly string|ResponseInterface|Closure|CacheRequestService $content,
+        private readonly ClientInterface $client,
+        private readonly ConfigManager $configManager,
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        if ($this->content instanceof Closure) {
-            return ($this->content)();
-        } elseif (is_string($this->content) && is_file($this->content)) {
-            $cache = new CacheRequestService(new LoadCustomFileService($this->content));
+        $config = $this->configManager->get(CustomResponseConfig::class, $request->getUri()->getHost());
+        if ($config->enabled === false) {
+            $this->client->sendRequest($request);
+        }
+
+        if (is_callable($config->content)) {
+            return ($config->content)($request);
+        } elseif (is_string($config->content) && is_file($config->content)) { // *.shttp
+            $cache = new CacheRequestService(new LoadCustomFileService($config->content));
             $body = $cache->restore('');
-        } elseif ($this->content instanceof CacheRequestService){
-            $body = $this->content->restore('');
+        } elseif ($config->content instanceof CacheRequestService) {
+            $body = $config->content->restore('');
         } else {
-            $body = $this->content;
+            $body = $config->content;
         }
 
         return $body instanceof ResponseInterface

@@ -11,7 +11,7 @@ use StrictPhp\HttpClients\Actions\StreamAction;
 use StrictPhp\HttpClients\Clients\CacheResponse\Actions\CacheKeyMakerAction;
 use StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseClient;
 use StrictPhp\HttpClients\Clients\CustomizeRequest\CustomizeRequestClient;
-use StrictPhp\HttpClients\Clients\CustomResponse\CustomResponseClientFactory;
+use StrictPhp\HttpClients\Clients\CustomResponse\CustomResponseClient;
 use StrictPhp\HttpClients\Clients\Event\Actions\MakePathAction;
 use StrictPhp\HttpClients\Clients\Event\EventClient;
 use StrictPhp\HttpClients\Clients\Retry\RetryClient;
@@ -84,20 +84,11 @@ class HttpExtension extends CompilerExtension
                 'sleep' => SleepClient::class,
                 'retry' => RetryClient::class,
                 'customizeRequest' => CustomizeRequestClient::class,
+                'customResponse' => CustomResponseClient::class,
             ] as $alias => $class
         ) {
             $this->buildClient($class, $alias);
         }
-
-        $this->buildCustomResponse();
-    }
-
-    private function buildCustomResponse(): void
-    {
-        $this->getContainerBuilder()
-            ->addDefinition($this->prefix('middleware.customResponse'))
-            ->setCreator(CustomResponseClientFactory::class, ['success'])
-            ->setAutowired(false);
     }
 
     /**
