@@ -10,7 +10,7 @@ use StrictPhp\HttpClients\Services\CacheRequestService;
 final class CustomResponseConfig extends AbstractConfig
 {
     /**
-     * @param string|ResponseInterface|callable|CacheRequestService $content
+     * @param string|ResponseInterface|callable|CacheRequestService $content - readonly
      */
     public function __construct(
         public readonly bool $enabled = true,

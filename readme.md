@@ -8,6 +8,8 @@ The HTTP Clients package provides a collection of HTTP clients that can be used 
 - **[CacheResponseClient](#cacheresponseclient-file)**: Utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests.
 - **[CustomizeRequestClient](#customizerequestclient-file)**: You can modify the request before sending it.
 - **[EventClient](#eventclient-file)**: Dependent on PSR-14 (event-dispatcher) and enables you to attach events before, during, or after a request, which is useful for logging or other actions.
+- **[MainClient](#mainhttpclient-file)**: First middleware.
+- **[MockClient](#mockclient-file)**: Prepared for tests.
 - **[RetryClient](#retryclient-file)**: If the call sendRequest throw exception, it tries to send request once more.
 - **[SleepClient](#sleepclient-file)**: Allows you to introduce a wait interval between requests, which may be necessary for interacting with external APIs that require rate limiting.
 - **[StoreClient](#storeclient-file)**: Save your **REQ**uests as PHPStorm `REQ.http` file and corresponding **RES**ponse as a file with suffix `RES.<code>.[headers|xml|txt|json|html|pdf]`.
@@ -109,6 +111,10 @@ $configManager->add('strictphp.com', $config);
 ### MainHttpClient ([file](src/Clients/MainHttp/MainHttpClient.php))
 
 This is first endpoint for debugging. If you use [ClientsFactory](src/Factories/ClientsFactory.php), this instance will be returned.
+
+### MockClient ([file](src/Clients/Mock/MockClient.php))
+
+MockClient use for tests, you define response for current scope.
 
 ### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
 
