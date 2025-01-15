@@ -24,6 +24,7 @@ final class ConfigManager
     public function add(string $host, ConfigInterface|iterable $configs): void
     {
         if (is_iterable($configs)) {
+            /** @var iterable<ConfigInterface> $configs */
             foreach ($configs as $config) {
                 $this->add($host, $config);
             }
@@ -39,6 +40,7 @@ final class ConfigManager
     public function addDefault(ConfigInterface|iterable $configs): void
     {
         if (is_iterable($configs)) {
+            /** @var iterable<ConfigInterface> $configs */
             foreach ($configs as $config) {
                 $this->addDefault($config);
             }

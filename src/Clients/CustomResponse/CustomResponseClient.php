@@ -26,7 +26,10 @@ class CustomResponseClient implements ClientInterface
         }
 
         if (is_callable($config->content)) {
-            return ($config->content)($request);
+            $content = ($config->content)($request);
+            assert($content instanceof ResponseInterface);
+
+            return $content;
         } elseif (is_string($config->content) && is_file($config->content)) { // *.shttp
             $cache = new CacheRequestService(new LoadCustomFileService($config->content));
             $body = $cache->restore('');

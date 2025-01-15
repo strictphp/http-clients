@@ -21,7 +21,7 @@ final class SerializableResponse implements Serializable, Stringable
 
     public function __toString(): string
     {
-        return (string) $this->serialize();
+        return $this->serialize();
     }
 
     /**
@@ -63,7 +63,7 @@ final class SerializableResponse implements Serializable, Stringable
         $this->__unserialize($responseData);
     }
 
-    public function serialize(): ?string
+    public function serialize(): string
     {
         return serialize($this->__serialize());
     }
