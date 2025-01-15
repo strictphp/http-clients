@@ -13,7 +13,7 @@ final class CustomResponseConfig extends AbstractConfig
      * @param string|ResponseInterface|callable|CacheRequestService $content - readonly
      */
     public function __construct(
-        public readonly bool $enabled = true,
+        public readonly bool $enabled = false,
         public $content = 'success',
     )
     {
