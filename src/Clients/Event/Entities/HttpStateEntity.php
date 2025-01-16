@@ -11,12 +11,12 @@ final class HttpStateEntity
     public readonly float $start;
 
     /**
-     * @readonly
+     * readonly
      */
     public float $end = 0.0;
 
     /**
-     * @readonly
+     * readonly
      */
     public float $duration = 0.0;
 

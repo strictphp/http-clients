@@ -11,11 +11,12 @@ use StrictPhp\HttpClients\Services\LoadCustomFileService;
 final class ResponseFactory
 {
     /**
-     * @param string|ResponseInterface|callable|CacheRequestService $content
+     * @param string|ResponseInterface|(callable(RequestInterface): ResponseInterface)|CacheRequestService $content
      */
     public static function fromContent($content, RequestInterface $request): ResponseInterface
     {
         if (is_callable($content)) {
+            /** @var callable(RequestInterface): ResponseInterface $content */
             return ($content)($request);
         } elseif (is_string($content) && is_file($content)) { // *.shttp
             $cache = new CacheRequestService(new LoadCustomFileService($content));
