@@ -2,8 +2,10 @@
 
 namespace StrictPhp\HttpClients\Nette\DI;
 
+use GuzzleHttp\Client;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
+use Nette\DI\Definitions\Statement;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Actions\FindExtensionFromHeadersAction;
@@ -18,6 +20,7 @@ use StrictPhp\HttpClients\Clients\Retry\RetryClient;
 use StrictPhp\HttpClients\Clients\Sleep\SleepClient;
 use StrictPhp\HttpClients\Clients\Store\StoreClient;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
+use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 use StrictPhp\HttpClients\Factories\ClientsFactory;
 use StrictPhp\HttpClients\Filesystem\Factories\FileFactory;
 use StrictPhp\HttpClients\Iterators\ReverseIterator;
@@ -27,6 +30,7 @@ use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
 use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use Symfony\Component\HttpClient\Psr18Client;
 
 class HttpExtension extends CompilerExtension
 {
@@ -56,6 +60,23 @@ class HttpExtension extends CompilerExtension
 
         if ($eventDispatcher !== null) {
             $this->buildClient(EventClient::class, 'event');
+        }
+
+        // add client
+        $clientDefinition = $this->getContainerBuilder()
+            ->getDefinition($this->prefix('main.client'));
+        assert($clientDefinition instanceof ServiceDefinition);
+
+        if ($clientDefinition->getFactory()->getEntity() === ClientInterface::class) {
+            if (class_exists(Client::class)) {
+                $clientDefinition->setFactory(new Statement(Client::class));
+            } elseif (class_exists(Psr18Client::class)) {
+                $clientDefinition->setFactory(new Statement(Psr18Client::class));
+            } else {
+                throw new InvalidStateException(
+                    sprintf('Register http client like service name %s.', $this->prefix('main.client')),
+                );
+            }
         }
     }
 

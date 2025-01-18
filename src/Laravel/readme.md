@@ -26,7 +26,9 @@ First, register the service provider:
 ]
 ```
 
-To ensure everything works correctly, you need to connect the main HTTP client; in the example, we've chosen Guzzle.
+If we have `guzzlehttp/guzzle` or `symfony/http-client` in the project, the ServiceProvider will find and automatically connect it.
+If we have another PSR-18 implementation or need to change the default client parameters, adjustments are necessary.
+In the example, we chose Guzzle.
 
 ```php
 use GuzzleHttp\Client;
@@ -36,7 +38,7 @@ final class MyServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     public function register() {
         parent::register();
-        $this->app->singleton(HttpClientsServiceProvider::ServiceMainClient, static fn (): ClientInterface => new Client());
+        $this->app->singleton(HttpClientsServiceProvider::ServiceMainClient, static fn (): ClientInterface => new Client(['timeout' => 5.0]));
     }
 
 }

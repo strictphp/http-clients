@@ -41,7 +41,8 @@
     "phpstan/phpstan-deprecation-rules": "^2.0",
     "phpstan/phpstan-strict-rules": "^2.0",
     "phpunit/phpunit": "^11.2",
-    "strictphp/conventions": "^v1.0"
+    "strictphp/conventions": "^v1.0",
+    "symfony/http-client": "^7.2"
   },
   "scripts": {
     "analyse": "./vendor/bin/phpstan",

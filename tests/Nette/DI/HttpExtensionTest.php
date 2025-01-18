@@ -2,7 +2,6 @@
 
 namespace StrictPhp\HttpClients\Tests\Nette\DI;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Nette\DI\Compiler;
@@ -27,6 +26,7 @@ use StrictPhp\HttpClients\Nette\DI\HttpExtension;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CacheRequestService;
+use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpExtensionTest extends TestCase
 {
@@ -41,6 +41,7 @@ final class HttpExtensionTest extends TestCase
     public function testBuildClient(): void
     {
         $container = $this->createContainer([
+            'psrHttp.main.client' => Psr18Client::class,
             EventDispatcherMock::class,
             'psrHttp.config.manager' => [
                 'setup' => [
@@ -115,7 +116,6 @@ final class HttpExtensionTest extends TestCase
         $class = $loader->load(function (Compiler $compiler) use ($config, $tempDir, $logDir): void {
             $compiler->addExtension('psrHttp', new HttpExtension($tempDir, $logDir));
 
-            $config['psrHttp.main.client'] = Client::class;
             $config['psrHttp.factory'] = HttpFactory::class;
             $compiler->addConfig([
                 'services' => $config,
