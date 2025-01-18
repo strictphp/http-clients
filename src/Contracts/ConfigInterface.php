@@ -10,10 +10,10 @@ interface ConfigInterface
     public function __construct();
 
     /**
-     * @param array<string, mixed> $an_array
+     * @param array<string, mixed> $anArray
      * @return static
      */
-    public static function __set_state(array $an_array): object;
+    public static function __set_state(array $anArray): object;
 
     /**
      * @param static $object

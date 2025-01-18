@@ -2,18 +2,12 @@
 
 namespace StrictPhp\HttpClients\Clients\Event;
 
-use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 final class EventConfig extends AbstractConfig
 {
     public function __construct(
         public bool $enabled = true,
-    )
-    {
-    }
-
-    public function initFromDefaultConfig(ConfigInterface $object): void
-    {
+    ) {
     }
 }

@@ -13,11 +13,11 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 final class FactoryToServiceIterator implements IteratorAggregate
 {
     /**
-     * @param array<class-string<ClientFactoryContract>> $factories
+     * @param ReverseIterator<int, class-string<ClientFactoryContract>> $factories
      */
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly array $factories,
+        private readonly ReverseIterator $factories,
     ) {
     }
 
@@ -26,7 +26,7 @@ final class FactoryToServiceIterator implements IteratorAggregate
      */
     public function getIterator(): Generator
     {
-        foreach (new ReverseIterator($this->factories) as $factoryStr) {
+        foreach ($this->factories as $factoryStr) {
             $factory = $this->container->get($factoryStr);
             assert($factory instanceof ClientFactoryContract);
 

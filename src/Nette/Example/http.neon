@@ -10,7 +10,7 @@ services:
 	psrHttp.main.client: GuzzleHttp\Client([timeout: 5.0]) # or other PSR-18 client
 	psrHttp.middlewares:
 		arguments:
-			factories: # the order is important, you can remove or add any middleware or change order
+			- # the order is important, you can remove or add any middleware or change order
 				- @psrHttp.middleware.cacheResponse
 				- @psrHttp.middleware.retry
 				- @psrHttp.middleware.sleep

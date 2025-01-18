@@ -52,7 +52,7 @@ final class HttpExtensionTest extends TestCase
             ],
             'psrHttp.middlewares' => [
                 'arguments' => [
-                    'factories' => [
+                    [
                         '@psrHttp.middleware.cacheResponse',
                         '@psrHttp.middleware.retry',
                         '@psrHttp.middleware.sleep',
