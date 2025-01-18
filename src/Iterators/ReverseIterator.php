@@ -2,33 +2,55 @@
 
 namespace StrictPhp\HttpClients\Iterators;
 
-use Generator;
-use IteratorAggregate;
-use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
+use Iterator;
 
 /**
- * @template T
- * @implements IteratorAggregate<int, ClientFactoryContract>
+ * @template TKey=int|string
+ * @template TValue=mixed
+ * @implements Iterator<TKey, TValue>
  */
-final class ReverseIterator implements IteratorAggregate
+final class ReverseIterator implements Iterator
 {
     /**
-     * @param array<T> $factories
+     * @var TKey
+     */
+    private mixed $key;
+
+    /**
+     * @param array<TKey, TValue> $array
      */
     public function __construct(
-        private readonly array $factories,
+        private array $array,
     ) {
     }
 
-    /**
-     * @return Generator<T>
-     */
-    public function getIterator(): Generator
+    public function current(): mixed
     {
-        $count = count($this->factories) - 1;
+        /** @var TValue $value */
+        $value = current($this->array);
 
-        for ($i = $count; $i >= 0; --$i) {
-            yield $this->factories[$i];
-        }
+        return $value;
+    }
+
+    public function next(): void
+    {
+        prev($this->array);
+    }
+
+    public function key(): mixed
+    {
+        return $this->key;
+    }
+
+    public function valid(): bool
+    {
+        $this->key = key($this->array); // @phpstan-ignore-line
+
+        return $this->key !== null;
+    }
+
+    public function rewind(): void
+    {
+        end($this->array);
     }
 }

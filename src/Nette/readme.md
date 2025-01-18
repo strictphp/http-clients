@@ -40,7 +40,7 @@ Currently, we're not utilizing any features provided by the library. Let's enabl
 services:
     psrHttp.middlewares:
         arguments:
-            factories:
+            -
                 - @psrHttp.middleware.cacheResponse
                 - @psrHttp.middleware.retry
                 - @psrHttp.middleware.sleep
@@ -81,7 +81,7 @@ services:
 
     psrHttp.middlewares:
         arguments:
-            factories:
+            -
                 - @my.middleware
 ```
 

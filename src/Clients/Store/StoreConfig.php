@@ -2,7 +2,6 @@
 
 namespace StrictPhp\HttpClients\Clients\Store;
 
-use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 final class StoreConfig extends AbstractConfig
@@ -12,11 +11,6 @@ final class StoreConfig extends AbstractConfig
         public bool $serialized = true,
         public bool $onFail = true,
         public bool $onSuccess = true,
-    )
-    {
-    }
-
-    public function initFromDefaultConfig(ConfigInterface $object): void
-    {
+    ) {
     }
 }

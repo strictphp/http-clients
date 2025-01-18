@@ -1,6 +1,6 @@
 # Http pro Nette
 
-Máte oblíbeného http clienta implementujícího PSR-18 (guzzlehttp/guzzle, symfony/http-client, atd...). Nástroj vám vnese světlo do odchozí komunikace, umožní logovat requesty, opakovat requesty, dát časovou mezeru mezi requesty na stejného hosta, kešovat requesty pro vývoj a debugovat v podobě generovaných souborů pro phpstrom, které sputíte přes IDE. Konfigurace lze dělat pro všechny hosty nebo jednotlivě zvlášť, podle potřeb serveru se kterým komunikujeme.
+Máte oblíbeného http klienta implementujícího PSR-18 (guzzlehttp/guzzle, symfony/http-client, atd...). Nástroj vám vnese světlo do odchozí komunikace, umožní logovat requesty, opakovat requesty, dát časovou mezeru mezi requesty na stejného hosta, kešovat requesty pro vývoj a debugovat v podobě generovaných souborů pro phpstrom, které sputíte přes IDE. Konfigurace lze dělat pro všechny hosty nebo jednotlivě zvlášť, podle potřeb serveru se kterým komunikujeme.
 
 ## Jak to funguje
 
@@ -16,8 +16,7 @@ Pokud nemáte žádného http klienta, stačí nainstalovat.
 composer require guzzlehttp/guzzle
 ```
 
-NEON konfigurace
--------------------
+### NEON konfigurace
 
 Klasika, je potřeba registrovat rozšíření.
 ```neon
@@ -40,7 +39,7 @@ Takže si zapneme middlwares, které potřebujeme. Na pořadí záleží, je jen
 services:
 	psrHttp.middlewares:
 		arguments:
-			factories:
+			-
 				- @psrHttp.middleware.cacheResponse
 				- @psrHttp.middleware.retry
 				- @psrHttp.middleware.sleep
@@ -83,7 +82,7 @@ services:
 		
 	psrHttp.middlewares:
 		arguments:
-			factories:
+			-
 			    - @my.middleware
 ```
 

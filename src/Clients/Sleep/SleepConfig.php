@@ -2,7 +2,6 @@
 
 namespace StrictPhp\HttpClients\Clients\Sleep;
 
-use StrictPhp\HttpClients\Contracts\ConfigInterface;
 use StrictPhp\HttpClients\Entities\AbstractConfig;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 
@@ -20,10 +19,5 @@ final class SleepConfig extends AbstractConfig
         if ($this->from >= $this->to) {
             throw new InvalidStateException('Parameter $from is higher than $to.');
         }
-    }
-
-    public function initFromDefaultConfig(ConfigInterface $object): void
-    {
-        // intentionally empty
     }
 }
