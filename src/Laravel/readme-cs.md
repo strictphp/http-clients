@@ -26,7 +26,9 @@ Použijte následující třídu
 ]
 ```
 
-Aby všechno dobře fungovalo, je potřeba připojit hlavního http klienta, v přikladu jsme zvolili guzzle.
+Pokud máme v projektu `guzzlehttp/guzzle` nebo `symfony/http-client`, ServiceProvider si ho najde a automaticky připojí.
+Máme-li jinou implementaci PSR-18 nebo bude potřeba změnit výchozí parametry klienta, je potřeba upravit.
+V přikladu jsme zvolili guzzle.
 
 ```php
 use GuzzleHttp\Client;
@@ -36,7 +38,7 @@ final class MyServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     public function register() {
         parent::register();
-        $this->app->singleton(HttpClientsServiceProvider::ServiceMainClient, static fn (): ClientInterface => new Client());
+        $this->app->singleton(HttpClientsServiceProvider::ServiceMainClient, static fn (): ClientInterface => new Client(['timeout' => 5.0]));
     }
 
 } 

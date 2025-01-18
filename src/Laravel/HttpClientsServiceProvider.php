@@ -24,6 +24,7 @@ use StrictPhp\HttpClients\Contracts\ClientsFactoryContract;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
+use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 use StrictPhp\HttpClients\Factories\ClientsFactory;
 use StrictPhp\HttpClients\Factories\ConfigManagerFactory;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
@@ -35,6 +36,7 @@ use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
 use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpClientsServiceProvider extends ServiceProvider
 {
@@ -78,10 +80,14 @@ final class HttpClientsServiceProvider extends ServiceProvider
         });
 
         $this->app->singletonIf(self::ServiceMainClient, static function (Application $application): ClientInterface {
-            $client = $application->make(Client::class);
-            assert($client instanceof ClientInterface);
-
-            return $client;
+            if (class_exists(Client::class)) {
+                return new Client();
+            } elseif (class_exists(Psr18Client::class)) {
+                return new Psr18Client();
+            }
+            throw new InvalidStateException(
+                sprintf('Register http client like service name %s.', self::ServiceMainClient),
+            );
         });
 
         $this->app->singletonIf(

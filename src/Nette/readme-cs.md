@@ -24,11 +24,13 @@ extensions:
 	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpExtension(%tempDir%/http, %logDir%/http)
 ```
 
-Aby všechno dobře fungovalo, je potřeba připojit hlavního http klienta, v přikladu jsme zvolili guzzle.
+Pokud máme v projektu `guzzlehttp/guzzle` nebo `symfony/http-client`, rozšíření si ho najde a automaticky připojí. 
+Máme-li jinou implementaci PSR-18 nebo bude potřeba změnit výchozí parametry klienta, je potřeba upravit.
+V přikladu jsme zvolili guzzle.
 
 ```neon
 services:
-    psrHttp.main.client: GuzzleHttp\Client() # automaticky nastaveno autowire: false
+    psrHttp.main.client: GuzzleHttp\Client([timeout: 5.0]) # automaticky nastaveno autowire: false
 ```
 
 V tuto chvíli nám v aplikaci funguje DI na interface `Psr\Http\Client\ClientInterface`, jako třídu dostaneme `StrictPhp\HttpClients\Clients\MainHttp\MainHttpClient`. Třída `MainHttpClient` je vstupní pro všechny middlewares, takže si do ni můžete dát breakpoint a z ní začít krokovat. Nyní nevyužíváme žádných východ, které poskytuje knihovna.
