@@ -32,7 +32,7 @@ use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\FilesystemService;
 use Symfony\Component\HttpClient\Psr18Client;
 
-class HttpExtension extends CompilerExtension
+class HttpClientsExtension extends CompilerExtension
 {
     public function __construct(
         private readonly string $tempDir,

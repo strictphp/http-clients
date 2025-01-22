@@ -18,7 +18,7 @@ composer require guzzlehttp/guzzle
 
 ### Registrace ServiceProvider
 
-Použijte následující třídu
+Použijte následující třídu, pokud je vypnutý auto-discovery
 
 ```php
 'providers' => [

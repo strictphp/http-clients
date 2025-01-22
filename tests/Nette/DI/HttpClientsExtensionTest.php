@@ -22,13 +22,13 @@ use StrictPhp\HttpClients\Contracts\StreamActionContract;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Iterators\ReverseIterator;
 use StrictPhp\HttpClients\Managers\ConfigManager;
-use StrictPhp\HttpClients\Nette\DI\HttpExtension;
+use StrictPhp\HttpClients\Nette\DI\HttpClientsExtension;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CacheRequestService;
 use Symfony\Component\HttpClient\Psr18Client;
 
-final class HttpExtensionTest extends TestCase
+final class HttpClientsExtensionTest extends TestCase
 {
     public function testNoConfig(): void
     {
@@ -114,7 +114,7 @@ final class HttpExtensionTest extends TestCase
 
         $loader = new ContainerLoader($rootTempDir, true);
         $class = $loader->load(function (Compiler $compiler) use ($config, $tempDir, $logDir): void {
-            $compiler->addExtension('psrHttp', new HttpExtension($tempDir, $logDir));
+            $compiler->addExtension('psrHttp', new HttpClientsExtension($tempDir, $logDir));
 
             $config['psrHttp.factory'] = HttpFactory::class;
             $compiler->addConfig([

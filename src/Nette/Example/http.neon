@@ -2,7 +2,7 @@ parameters:
 	logDir: %tempDir%/log
 
 extensions:
-	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpExtension(%tempDir%, %logDir%)
+	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpClientsExtension(%tempDir%, %logDir%)
 
 services:
 	- GuzzleHttp\Psr7\HttpFactory

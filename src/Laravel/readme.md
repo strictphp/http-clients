@@ -18,7 +18,7 @@ composer require guzzlehttp/guzzle guzzlehttp/psr7
 
 ### Registering the ServiceProvider
 
-First, register the service provider:
+Use the following class if auto-discovery is disabled
 
 ```php
 'providers' => [

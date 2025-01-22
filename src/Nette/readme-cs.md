@@ -19,9 +19,10 @@ composer require guzzlehttp/guzzle
 ### NEON konfigurace
 
 Klasika, je potřeba registrovat rozšíření.
+
 ```neon
 extensions:
-	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpExtension(%tempDir%/http, %logDir%/http)
+	psrHttp: StrictPhp\HttpClients\Nette\DI\HttpClientsExtension(%tempDir%/http, %logDir%/http)
 ```
 
 Pokud máme v projektu `guzzlehttp/guzzle` nebo `symfony/http-client`, rozšíření si ho najde a automaticky připojí. 
