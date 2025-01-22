@@ -22,7 +22,7 @@ First, register the extension:
 
 ```neon
 extensions:
-    psrHttp: StrictPhp\HttpClients\Nette\DI\HttpExtension(%tempDir%/http, %logDir%/http)
+    psrHttp: StrictPhp\HttpClients\Nette\DI\HttpClientsExtension(%tempDir%/http, %logDir%/http)
 ```
 
 If we have `guzzlehttp/guzzle` or `symfony/http-client` in the project, the extension will find and automatically connect it.
