@@ -109,14 +109,6 @@ $configManager->add('strictphp.com', $config);
 - Each client can be built using its own Factory class (in their namespace). Factory uses a DI container that should resolve: ClientInterface for HTTP/s communication and ConfigManaer
 - Each client can be configured by ConfigManager.
 
-### MainHttpClient ([file](src/Clients/MainHttp/MainHttpClient.php))
-
-This is first endpoint for debugging. If you use [ClientsFactory](src/Factories/ClientsFactory.php), this instance will be returned.
-
-### MockClient ([file](src/Clients/Mock/MockClient.php))
-
-MockClient use for tests, you define response for current scope.
-
 ### CacheResponseClient ([file](src/Clients/CacheResponse/CacheResponseClient.php))
 
 The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, improving development speed by serving cached responses for subsequent requests. Here are some benefits and considerations:
@@ -124,19 +116,6 @@ The CacheResponseClient utilizes PSR-6 (simple-cache) for caching responses, imp
 - **Development Efficiency**: Speeds up development by caching responses, reducing the need for repeated API calls during development.
 - **Local Testing**: Enable the `saveOnly` option in production to cache responses and download them for testing on localhost, ensuring consistency and performance.
 - **Customization**: Customize cache key preparation by implementing your own contract in [CacheKeyMakerAction.php](src/Actions/CacheKeyMakerAction.php).
-
-### CustomResponseClient ([file](src/Clients/CustomResponse/CustomResponseClient.php))
-
-> Subject to change.
-
-You can define custom response file.
-
-The #1 parameter in constructor can be:
-
-- a path on serialized [SerializableResponse](src/Responses/SerializableResponse.php) which created by [SaveResponse.php](src/Responses/SaveResponse.php), file with extension `shttp` it's mean `serialized http`
-- a path on file with plain text, this is used like body only
-
-You need to set up container dependency to add the content you need.
 
 ### CustomizeRequestClient ([file](src/Clients/CustomizeRequest/CustomizeRequestClient.php))
 
@@ -154,6 +133,17 @@ $configManager->add('www.example.com', new CustomizeRequestConfig(function(Reque
 }));
 ```
 
+### CustomResponseClient ([file](src/Clients/CustomResponse/CustomResponseClient.php))
+
+> Subject to change.
+
+You can define custom response file foe each host.
+
+The #1 parameter in constructor can be:
+
+- a path on serialized [SerializableResponse](src/Responses/SerializableResponse.php) which created by [SaveResponse.php](src/Responses/SaveResponse.php), file with extension `shttp` it's mean `serialized http`
+- a path on file with plain text, this is used like body only
+
 ### EventClient ([file](src/Clients/Event/EventClient.php))
 
 > dependent on PSR-14 (event-dispatcher)
@@ -162,6 +152,14 @@ You can attach events before, failed or request success. It is useful for loggin
 
 - save http file for PHPStorm [SaveForPhpstormRequest.php](src/Requests/SaveForPhpstormRequest.php)
 - save response [SaveResponse.php](src/Responses/SaveResponse.php)
+
+### MainHttpClient ([file](src/Clients/MainHttp/MainHttpClient.php))
+
+This is first endpoint for debugging. If you use [ClientsFactory](src/Factories/ClientsFactory.php), this instance will be returned.
+
+### MockClient ([file](src/Clients/Mock/MockClient.php))
+
+MockClient use for tests, you define response for current scope.
 
 ### RetryClient ([file](src/Clients/Retry/RetryClient.php))
 
@@ -178,6 +176,19 @@ The StoreClient saves request and response, without dependency on PSR-14
 - save http file for PHPStorm [SaveForPhpstormRequest.php](src/Requests/SaveForPhpstormRequest.php)
 - save response [SaveResponse.php](src/Responses/SaveResponse.php)
 
+# Testing
+
+You can save file with extension *.shttp by [SaveResponse](src/Responses/SaveResponse.php) or use our PSR16 implementation [CachePsr16Service](src/Services/CachePsr16Service.php). This file you can to use in tests by [MockClient](src/Clients/Mock/MockClient.php).
+
+```php
+use StrictPhp\HttpClients\Clients\Mock\MockClient;
+/** @var \Psr\Http\Message\RequestInterface $request */
+$client = new MockClient(__DIR__ . '/dir/filename.shttp');
+$response = $client->sendRequest($request);
+
+$response instanceof \Psr\Http\Message\ResponseInterface;
+```
+
 # Write your own client
 
 You can write your own client simply by implementing these interfaces:
@@ -187,19 +198,6 @@ You can write your own client simply by implementing these interfaces:
 - Factory for client implement `StrictPhp\HttpClients\Contracts\ClientFactoryContract`
 
 Below is an example of an implementation:
-
-## Testing
-
-You can save file with extension *.shttp by [SaveResponse](src/Responses/SaveResponse.php) or use our PSR16 implementation [CachePsr16Service](src/Services/CachePsr16Service.php). This file you can to use in tests by [CustomResponseClient](src/Clients/CustomResponse/CustomResponseClient.php).
-
-```php
-use StrictPhp\HttpClients\Clients\CustomResponse\CustomResponseClient;
-/** @var \Psr\Http\Message\RequestInterface $request */
-$client = new CustomResponseClient(__DIR__ . '/dir/filename.shttp');
-$response = $client->sendRequest($request);
-
-$response instanceof \Psr\Http\Message\ResponseInterface;
-```
 
 ## Config
 
@@ -218,25 +216,13 @@ class Config extends AbstractConfig
 {
     public function __construct(
         private readonly int $optionA = 1,
-        private readonly int int $optionB = 2,
+        private readonly int $optionB = 2,
     ) {
     }    
-
-    public function initFromDefaultConfig(ConfigInterface $object): void 
-    {
-        // if you want to pass an object reference from the default configuration
-        /** @see \StrictPhp\HttpClients\Clients\CacheResponse\CacheResponseConfig */
-        
-        // or empty
-        /** @see \StrictPhp\HttpClients\Clients\Sleep\SleepConfig */
-    }
-    
 }
 ```
 
 ## Client
-
-
 
 ```php
 namespace My;
