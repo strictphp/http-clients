@@ -5,6 +5,7 @@ namespace StrictPhp\HttpClients\Clients\MainHttp;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use StrictPhp\HttpClients\Helpers\Stream;
 
 final class MainHttpClient implements ClientInterface
 {
@@ -17,6 +18,9 @@ final class MainHttpClient implements ClientInterface
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         // here you can start debugging, add breakpoint at line below
-        return $this->client->sendRequest($request);
+        $response = $this->client->sendRequest($request);
+        Stream::rewind($response->getBody());
+
+        return $response;
     }
 }
