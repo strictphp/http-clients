@@ -3,8 +3,9 @@
 namespace StrictPhp\HttpClients\Filesystem\Contracts;
 
 use StrictPhp\HttpClients\Entities\FileInfoEntity;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 
 interface FileFactoryContract
 {
-    public function create(FileInfoEntity $file, string $suffix = ''): FileInterface;
+    public function create(FileInfoEntity $file): FileInterface;
 }

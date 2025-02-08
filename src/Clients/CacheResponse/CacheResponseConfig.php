@@ -13,6 +13,7 @@ final class CacheResponseConfig extends AbstractConfig
         public int $ttl = 0,
         public bool $saveOnly = false,
         public bool $enabled = true,
+        public ?int $limitByte = null,
         private ?CacheKeyMakerActionContract $cacheKeyMakerAction = null,
     ) {
     }

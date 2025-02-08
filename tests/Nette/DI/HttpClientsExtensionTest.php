@@ -25,7 +25,8 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Nette\DI\HttpClientsExtension;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
-use StrictPhp\HttpClients\Services\CacheRequestService;
+use StrictPhp\HttpClients\Services\SerializableResponseService;
+use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpClientsExtensionTest extends TestCase
@@ -89,7 +90,12 @@ final class HttpClientsExtensionTest extends TestCase
         Assert::assertTrue($container->getService('psrHttp.client.factory') instanceof ClientsFactoryContract);
 
         Assert::assertTrue($container->getService('psrHttp.cache.key.maker') instanceof CacheKeyMakerActionContract);
-        Assert::assertTrue($container->getService('psrHttp.cache.request.service') instanceof CacheRequestService);
+        Assert::assertTrue(
+            $container->getService('psrHttp.file.info.transformer') instanceof CacheKeyToFileInfoTransformer,
+        );
+        Assert::assertTrue(
+            $container->getService('psrHttp.serializable.response.service') instanceof SerializableResponseService,
+        );
         Assert::assertTrue($container->getService('psrHttp.filesystem.temp') instanceof Filesystem);
         Assert::assertTrue($container->getService('psrHttp.filesystem.log') instanceof Filesystem);
         Assert::assertTrue($container->getService('psrHttp.file.factory.log') instanceof FileFactoryContract);

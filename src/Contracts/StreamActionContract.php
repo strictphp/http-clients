@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Contracts;
 
 use Psr\Http\Message\StreamInterface;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 
 interface StreamActionContract
 {

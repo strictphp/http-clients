@@ -2,20 +2,23 @@
 
 namespace StrictPhp\HttpClients\Responses;
 
+use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Serializable;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 use StrictPhp\HttpClients\Helpers\Stream;
 use Stringable;
 
 /**
  * @phpstan-type SerializeType array{class: class-string<ResponseInterface>, protocolVersion: string,
- *     headers: array<string>|array<string, array<string>>, code: int, reason: string, body: string}
+ *     headers: array<string>|array<string, array<string>>, code: int, reason: string, body: string, file: string}
  */
 final class SerializableResponse implements Serializable, Stringable
 {
     public function __construct(
         public readonly ResponseInterface $response,
+        public readonly string $extension = '',
     ) {
     }
 
@@ -35,9 +38,14 @@ final class SerializableResponse implements Serializable, Stringable
             $response = $response->withHeader($name, $value);
         }
 
-        $this->response = $response->withStatus($data['code'], $data['reason'])
-            ->withProtocolVersion($data['protocolVersion'])
-            ->withBody(Utils::streamFor($data['body']));
+        if ($data['file'] === '') {
+            $response = $response->withBody(Utils::streamFor($data['body']));
+        }
+
+        $this->extension = $data['file'] ?? ''; // @phpstan-ignore-line forward compatibility, file does not exist in previous version
+        $this->response = $response
+            ->withStatus($data['code'], $data['reason'])
+            ->withProtocolVersion($data['protocolVersion']);
     }
 
     /**
@@ -51,8 +59,20 @@ final class SerializableResponse implements Serializable, Stringable
             'headers' => $this->response->getHeaders(),
             'code' => $this->response->getStatusCode(),
             'reason' => $this->response->getReasonPhrase(),
-            'body' => Stream::content($this->response->getBody()),
+            'body' => $this->extension === '' ? Stream::content($this->response->getBody()) : '',
+            'file' => $this->extension,
         ];
+    }
+
+    public function setExternalBody(FileInterface $file): ResponseInterface
+    {
+        $stream = (new HttpFactory())->createStreamFromFile($file->getPathname());
+        return $this->response->withBody($stream);
+    }
+
+    public function hasExternalBody(): bool
+    {
+        return $this->extension !== '';
     }
 
     public function unserialize(string $data): void

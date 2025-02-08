@@ -6,12 +6,18 @@ use Psr\Http\Message\StreamInterface;
 
 final class Stream
 {
-    public static function content(StreamInterface $stream): string
+    public static function rewind(StreamInterface $stream): void
     {
-        $body = (string) $stream;
         if ($stream->isSeekable()) {
             $stream->rewind();
         }
+    }
+
+    public static function content(StreamInterface $stream): string
+    {
+        $body = (string) $stream;
+        self::rewind($stream);
+
         return $body;
     }
 }

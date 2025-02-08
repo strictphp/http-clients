@@ -5,14 +5,16 @@ namespace StrictPhp\HttpClients\Clients\CacheResponse;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
-use StrictPhp\HttpClients\Services\CacheRequestService;
+use StrictPhp\HttpClients\Services\SerializableResponseService;
 
 final class CacheResponseClient implements ClientInterface
 {
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly CacheRequestService $cacheRequestService,
+        private readonly CacheInterface $cache,
+        private readonly SerializableResponseService $serializableResponseService,
         private readonly ConfigManager $configManager,
     ) {
     }
@@ -27,11 +29,19 @@ final class CacheResponseClient implements ClientInterface
 
         $key = $config->getCacheKeyMakerAction()
             ->execute($request);
-        $response = $config->saveOnly ? null : $this->cacheRequestService->restore($key);
+
+        $response = $config->saveOnly
+            ? null
+            : $this->serializableResponseService->restore($key, $this->cache->get($key));
 
         if ($response instanceof ResponseInterface === false) {
             $response = $this->client->sendRequest($request);
-            $this->cacheRequestService->store($key, $response, $config->ttl === 0 ? null : $config->ttl);
+
+            $this->cache->set(
+                $key,
+                $this->serializableResponseService->store($key, $response, $config->limitByte),
+                $config->ttl === 0 ? null : $config->ttl,
+            );
         }
 
         return $response;

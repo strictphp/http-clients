@@ -23,13 +23,15 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Exceptions\InvalidStateException;
 use StrictPhp\HttpClients\Factories\ClientsFactory;
 use StrictPhp\HttpClients\Filesystem\Factories\FileFactory;
+use StrictPhp\HttpClients\Helpers\Filesystem;
 use StrictPhp\HttpClients\Iterators\ReverseIterator;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
-use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use StrictPhp\HttpClients\Services\SerializableResponseService;
+use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 use Symfony\Component\HttpClient\Psr18Client;
 
 class HttpClientsExtension extends CompilerExtension
@@ -117,10 +119,17 @@ class HttpClientsExtension extends CompilerExtension
      */
     private function buildClient(string $class, string $alias): void
     {
+        $parameters = [];
+        if ($class === CacheResponseClient::class) {
+            $parameters = [
+                'cache' => $this->prefix('@cache'),
+            ];
+        }
+
         $this->getContainerBuilder()
             ->addFactoryDefinition($this->prefix('middleware.' . $alias))
             ->setImplement(ClientFactoryContract::class)
-            ->setResultDefinition((new ServiceDefinition())->setCreator($class))
+            ->setResultDefinition((new ServiceDefinition())->setCreator($class, $parameters))
             ->setAutowired(false);
     }
 
@@ -164,8 +173,16 @@ class HttpClientsExtension extends CompilerExtension
     private function buildInternalServices(): void
     {
         $this->getContainerBuilder()
-            ->addDefinition($this->prefix('cache.request.service'))
-            ->setCreator(CacheRequestService::class, [$this->prefix('@cache')]);
+            ->addDefinition($this->prefix('file.info.transformer'))
+            ->setCreator(CacheKeyToFileInfoTransformer::class);
+
+        $this->getContainerBuilder()
+            ->addDefinition($this->prefix('serializable.response.service'))
+            ->setCreator(SerializableResponseService::class, [
+                $this->prefix('@file.info.transformer'),
+                $this->prefix('@file.factory.temp'),
+                $this->prefix('@extension.header'),
+            ]);
 
         self::makeDirectory($this->tempDir);
         $this->getContainerBuilder()
@@ -226,6 +243,6 @@ class HttpClientsExtension extends CompilerExtension
 
     private static function makeDirectory(string $path): void
     {
-        @mkdir($path, 0777, true);
+        Filesystem::makeDirectory($path, 0o777);
     }
 }

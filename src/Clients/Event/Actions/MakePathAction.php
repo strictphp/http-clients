@@ -17,8 +17,8 @@ final class MakePathAction implements MakePathActionContract
             date('H', (int) $event->start),
         ]);
 
-        $filename = implode('-', [date('H-i-sO', (int) $event->start), $event->id]) . ('.' . $extension);
+        $filename = implode('-', [date('H-i-sO', (int) $event->start), $event->id]);
 
-        return new FileInfoEntity($directory, $filename);
+        return new FileInfoEntity($directory, $filename, $extension);
     }
 }
