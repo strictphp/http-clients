@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace StrictPhp\HttpClients\Services;
 
@@ -6,25 +6,16 @@ use DateInterval;
 use Exception;
 use Psr\SimpleCache\CacheInterface;
 
-class LoadCustomFileService implements CacheInterface
+final class LoadCustomFileService implements CacheInterface
 {
-    public function __construct(
-        private readonly string|null $filepath,
-    ) {
-    }
-
     public function get(string $key, mixed $default = null): mixed
     {
-        if ($this->filepath !== null && is_file($this->filepath)) {
-            $content = file_get_contents($this->filepath);
-            if (is_string($content)) {
-                return $content;
-            }
-
-            return $default;
+        if (is_file($key)) {
+            $content = file_get_contents($key);
+            return $content === false ? $default : $content;
         }
 
-        return $this->filepath ?? $default;
+        return $default;
     }
 
     public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
@@ -34,7 +25,7 @@ class LoadCustomFileService implements CacheInterface
 
     public function delete(string $key): bool
     {
-        throw new Exception('not implemented');
+        return @unlink($key);
     }
 
     public function clear(): bool

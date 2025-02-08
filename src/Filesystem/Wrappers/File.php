@@ -2,73 +2,94 @@
 
 namespace StrictPhp\HttpClients\Filesystem\Wrappers;
 
-use SplFileObject;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
+use Psr\Http\Message\StreamInterface;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
+use StrictPhp\HttpClients\Helpers\Byte;
+use StrictPhp\HttpClients\Helpers\Stream;
 
 final class File implements FileInterface
 {
-    private ?SplFileObject $file = null;
-
     public function __construct(
         private readonly string $pathname,
     ) {
     }
 
-    public function write(string $content): void
+    public function write(string|StreamInterface $content): void
     {
-        $this->getFile()
-            ->fwrite($content);
+        if ($content instanceof StreamInterface) {
+            $this->remove();
+            Stream::rewind($content);
+
+            while ($content->eof() === false) {
+                $this->filePutContents($content->read(Byte::fromMega(1)), FILE_APPEND);
+            }
+        } else {
+            $this->filePutContents($content);
+        }
     }
 
     public function content(): ?string
     {
-        $file = $this->readFile();
-        if (! $file instanceof SplFileObject) {
+        if ($this->isFile() === false) {
             return null;
-        } elseif ($file->getMTime() !== $file->getCTime() && $file->getMTime() < time()) {
+        } elseif ($this->isTllExpired()) {
             $this->remove();
             return null;
         }
 
-        $content = $file->fread($file->getSize());
-        if ($content === false) {
-            return null;
-        }
+        $content = file_get_contents($this->pathname);
 
-        return $content;
+        return $content === false ? null : $content;
     }
 
     public function remove(): void
     {
-        $file = $this->readFile();
-        if ($file instanceof SplFileObject) {
-            unlink($file->getPathname());
-            $this->file = null;
+        if ($this->isFile()) {
+            unlink($this->pathname);
+        }
+
+        $ttlFile = $this->ttlFile();
+        if (is_file($ttlFile)) {
+            unlink($ttlFile);
         }
     }
 
     public function setTtl(?int $ttlToSeconds): void
     {
-        /** @var int $ctime - file exists! */
-        $ctime = $this->getFile()
-            ->getCTime();
-        touch($this->pathname, $ctime + (int) $ttlToSeconds);
-    }
-
-    private function getFile(): SplFileObject
-    {
-        if (! $this->file instanceof SplFileObject) {
-            if (is_file($this->pathname) === false) {
-                touch($this->pathname);
-            }
-            $this->file = new SplFileObject($this->pathname, 'r+');
+        if ($ttlToSeconds === null) {
+            return;
         }
 
-        return $this->file;
+        file_put_contents($this->ttlFile(), (string) (time() + $ttlToSeconds));
     }
 
-    private function readFile(): ?SplFileObject
+    public function getPathname(): string
     {
-        return $this->file ?? (is_file($this->pathname) ? $this->getFile() : null);
+        return $this->pathname;
+    }
+
+    public function isFile(): bool
+    {
+        return is_file($this->pathname);
+    }
+
+    private function filePutContents(string $content, int $flags = 0): void
+    {
+        file_put_contents($this->pathname, $content, $flags);
+    }
+
+    private function ttlFile(): string
+    {
+        return $this->pathname . '.ttl';
+    }
+
+    private function isTllExpired(): bool
+    {
+        if (is_file($this->ttlFile()) === false) {
+            return false;
+        }
+        $time = (int) file_get_contents($this->ttlFile());
+
+        return $time < time();
     }
 }

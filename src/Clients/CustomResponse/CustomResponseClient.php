@@ -5,7 +5,7 @@ namespace StrictPhp\HttpClients\Clients\CustomResponse;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use StrictPhp\HttpClients\Helpers\ResponseFactory;
+use StrictPhp\HttpClients\Helpers\Response;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
 class CustomResponseClient implements ClientInterface
@@ -23,6 +23,6 @@ class CustomResponseClient implements ClientInterface
             $this->client->sendRequest($request);
         }
 
-        return ResponseFactory::fromContent($config->content, $request);
+        return Response::fromContent($config->content, $request);
     }
 }

@@ -34,8 +34,9 @@ use StrictPhp\HttpClients\Iterators\ReverseIterator;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
-use StrictPhp\HttpClients\Services\CacheRequestService;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use StrictPhp\HttpClients\Services\SerializableResponseService;
+use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpClientsServiceProvider extends ServiceProvider
@@ -61,7 +62,19 @@ final class HttpClientsServiceProvider extends ServiceProvider
         $this->app->singletonIf(SaveResponse::class, SaveResponse::class);
         $this->app->singletonIf(StreamActionContract::class, StreamAction::class);
         // factories
-        $this->app->singletonIf(CacheResponseClientFactory::class);
+        $this->app->singletonIf(
+            CacheResponseClientFactory::class,
+            static function (Application $application): CacheResponseClientFactory {
+                $cache = $application->make(self::ServiceCache);
+                assert($cache instanceof CacheInterface);
+                $serializableResponse = $application->make(SerializableResponseService::class);
+                assert($serializableResponse instanceof SerializableResponseService);
+                $configManager = $application->make(ConfigManager::class);
+                assert($configManager instanceof ConfigManager);
+
+                return new CacheResponseClientFactory($cache, $serializableResponse, $configManager);
+            },
+        );
         $this->app->singletonIf(CustomizeRequestClientFactory::class);
         $this->app->singletonIf(CustomResponseClientFactory::class);
         $this->app->singletonIf(EventClientFactory::class);
@@ -128,18 +141,16 @@ final class HttpClientsServiceProvider extends ServiceProvider
                 $fileFactory = $application->make(FileFactoryContract::class);
                 assert($fileFactory instanceof FileFactoryContract);
 
-                return new CachePsr16Service($fileFactory, 'cached');
+                $cacheKeyToFileInfoTransformer = $application->make(CacheKeyToFileInfoTransformer::class);
+                assert($cacheKeyToFileInfoTransformer instanceof CacheKeyToFileInfoTransformer);
+
+                return new CachePsr16Service($fileFactory, $cacheKeyToFileInfoTransformer);
             },
         );
 
         $this->app->singletonIf(
-            CacheRequestService::class,
-            static function (Application $application): CacheRequestService {
-                $cache = $application->make(self::ServiceCache);
-                assert($cache instanceof CacheInterface);
-
-                return new CacheRequestService($cache);
-            },
+            CacheKeyToFileInfoTransformer::class,
+            static fn (): CacheKeyToFileInfoTransformer => new CacheKeyToFileInfoTransformer('cached'),
         );
     }
 

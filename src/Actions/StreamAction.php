@@ -4,7 +4,7 @@ namespace StrictPhp\HttpClients\Actions;
 
 use Psr\Http\Message\StreamInterface;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 
 final class StreamAction implements StreamActionContract
 {

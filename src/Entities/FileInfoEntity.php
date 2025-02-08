@@ -4,9 +4,17 @@ namespace StrictPhp\HttpClients\Entities;
 
 final class FileInfoEntity
 {
+    public string $name;
+
     public function __construct(
         public string $path,
-        public string $name,
+        string $name,
+        string $extension,
     ) {
+        if ($extension !== '') {
+            $name .= '.' . $extension;
+        }
+
+        $this->name = $name;
     }
 }

@@ -5,16 +5,16 @@ namespace StrictPhp\HttpClients\Services;
 use DateInterval;
 use Exception;
 use Psr\SimpleCache\CacheInterface;
-use StrictPhp\HttpClients\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
-use StrictPhp\HttpClients\Filesystem\Contracts\FileInterface;
+use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 use StrictPhp\HttpClients\Helpers\Time;
+use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 
 final class CachePsr16Service implements CacheInterface
 {
     public function __construct(
         private readonly FileFactoryContract $fileFactory,
-        private readonly string $tempDir = '',
+        private readonly CacheKeyToFileInfoTransformer $cacheKeyToFileInfoTransformer,
     ) {
     }
 
@@ -73,19 +73,8 @@ final class CachePsr16Service implements CacheInterface
 
     private function createFileInfoEntity(string $key): FileInterface
     {
-        preg_match('~^(?<path>.+/)(?<filename>.+)$~', $key, $path);
+        $fileInfo = $this->cacheKeyToFileInfoTransformer->transform($key, 'shttp');
 
-        if (isset($path['filename'], $path['path'])) {
-            $subDir = $path['path'];
-            $fileName = $path['filename'];
-        } else {
-            $subDir = '';
-            $fileName = $key;
-        }
-
-        $subDir .= substr($fileName, 0, 2);
-        $fileInfo = new FileInfoEntity($this->tempDir . '/' . $subDir, $fileName);
-
-        return $this->fileFactory->create($fileInfo, '.shttp');
+        return $this->fileFactory->create($fileInfo);
     }
 }

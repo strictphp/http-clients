@@ -4,6 +4,7 @@ namespace StrictPhp\HttpClients\Services;
 
 use Exception;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use StrictPhp\HttpClients\Helpers\Filesystem as HelpersFilesystem;
 
 final class FilesystemService implements Filesystem
 {
@@ -19,7 +20,7 @@ final class FilesystemService implements Filesystem
 
     public function makeDirectory($path)
     {
-        return @mkdir($this->path($path), 0o755, true);
+        return HelpersFilesystem::makeDirectory($this->path($path));
     }
 
     public function exists($path)
