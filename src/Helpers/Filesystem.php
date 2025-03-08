@@ -8,4 +8,9 @@ final class Filesystem
     {
         return @mkdir($path, $mode, true);
     }
+
+    public static function addSlash(string $path): string
+    {
+        return rtrim($path, '\\/') . DIRECTORY_SEPARATOR;
+    }
 }
