@@ -9,6 +9,8 @@ use StrictPhp\HttpClients\Helpers\Stream;
 
 final class File implements FileInterface
 {
+    private int $flag = 0;
+
     public function __construct(
         private readonly string $pathname,
     ) {
@@ -24,7 +26,8 @@ final class File implements FileInterface
                 $this->filePutContents($content->read(Byte::fromMega(1)), FILE_APPEND);
             }
         } else {
-            $this->filePutContents($content);
+            $this->filePutContents($content, $this->flag);
+            $this->flag = FILE_APPEND;
         }
     }
 
