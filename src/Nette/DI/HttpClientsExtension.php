@@ -187,13 +187,13 @@ class HttpClientsExtension extends CompilerExtension
         self::makeDirectory($this->tempDir);
         $this->getContainerBuilder()
             ->addDefinition($this->prefix('filesystem.temp'))
-            ->setCreator(FilesystemService::class, [$this->tempDir])
+            ->setCreator(FilesystemService::class, [Filesystem::addSlash($this->tempDir)])
             ->setAutowired(false);
 
         self::makeDirectory($this->logDir);
         $this->getContainerBuilder()
             ->addDefinition($this->prefix('filesystem.log'))
-            ->setCreator(FilesystemService::class, [$this->logDir])
+            ->setCreator(FilesystemService::class, [Filesystem::addSlash($this->logDir)])
             ->setAutowired(false);
 
         $this->getContainerBuilder()
