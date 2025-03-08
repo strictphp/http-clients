@@ -25,7 +25,7 @@ final class LoadCustomFileService implements CacheInterface
 
     public function delete(string $key): bool
     {
-        return @unlink($key);
+        return is_file($key) && unlink($key);
     }
 
     public function clear(): bool

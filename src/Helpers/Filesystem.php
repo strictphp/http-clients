@@ -6,7 +6,7 @@ final class Filesystem
 {
     public static function makeDirectory(string $path, int $mode = 0o755): bool
     {
-        return @mkdir($path, $mode, true);
+        return is_dir($path) === false && mkdir($path, $mode, true);
     }
 
     public static function addSlash(string $path): string
