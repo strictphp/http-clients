@@ -9,5 +9,5 @@ interface ClientsFactoryContract
     /**
      * @param iterable<ClientFactoryContract> $factories
      */
-    public function create(?ClientInterface $client = null, iterable $factories = null): ClientInterface;
+    public function create(?ClientInterface $client = null, ?iterable $factories = null): ClientInterface;
 }
