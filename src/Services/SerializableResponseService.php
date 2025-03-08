@@ -24,12 +24,16 @@ final class SerializableResponseService
 
     public function restore(string $key, mixed $result): mixed
     {
-        if ($result instanceof SerializableResponse && $result->hasExternalBody()) {
-            return $result->setExternalBody(
-                $this->fileFactory->create(
-                    $this->cacheKeyToFileInfoTransformer->transform($key, $result->extension),
-                ),
-            );
+        if ($result instanceof SerializableResponse) {
+            if ($result->hasExternalBody()) {
+                $result->setExternalBody(
+                    $this->fileFactory->create(
+                        $this->cacheKeyToFileInfoTransformer->transform($key, $result->extension),
+                    ),
+                );
+            }
+
+            return $result->response;
         }
 
         return $result;
