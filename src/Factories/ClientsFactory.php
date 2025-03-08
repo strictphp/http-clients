@@ -18,7 +18,7 @@ final class ClientsFactory implements ClientsFactoryContract
     ) {
     }
 
-    public function create(?ClientInterface $client = null, iterable $factories = null): ClientInterface
+    public function create(?ClientInterface $client = null, ?iterable $factories = null): ClientInterface
     {
         $client ??= $this->client;
         foreach ($factories ?? $this->factories as $factory) {
