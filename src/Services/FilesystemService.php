@@ -125,33 +125,21 @@ final class FilesystemService implements Filesystem
         throw new Exception('not implemented');
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function files($directory = null, $recursive = false)
     {
         throw new Exception('not implemented');
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function allFiles($directory = null)
     {
         throw new Exception('not implemented');
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function directories($directory = null, $recursive = false)
     {
         throw new Exception('not implemented');
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function allDirectories($directory = null)
     {
         throw new Exception('not implemented');

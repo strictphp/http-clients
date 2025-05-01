@@ -24,7 +24,6 @@ final class HttpClientsServiceProviderTest extends TestCase
         $application->register($httpClientsServiceProvider);
 
         $client = $application->make(ClientInterface::class);
-        assert($client instanceof ClientInterface);
 
         Assert::assertSame(MainHttpClient::class, $client::class);
     }
@@ -47,11 +46,9 @@ final class HttpClientsServiceProviderTest extends TestCase
         $application->register($httpClientsServiceProvider);
 
         $client = $application->make(ClientInterface::class);
-        assert($client instanceof ClientInterface);
         Assert::assertSame(MainHttpClient::class, $client::class);
 
         $configManager = $application->make(ConfigManager::class);
-        assert($configManager instanceof ConfigManager);
         $config = $configManager->get(CustomResponseConfig::class, 'example.com');
         Assert::assertSame('done', $config->content);
         Assert::assertTrue($config->enabled);

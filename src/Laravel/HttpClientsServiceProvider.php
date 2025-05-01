@@ -24,7 +24,7 @@ use StrictPhp\HttpClients\Contracts\ClientsFactoryContract;
 use StrictPhp\HttpClients\Contracts\FindExtensionFromHeadersActionContract;
 use StrictPhp\HttpClients\Contracts\MakePathActionContract;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Factories\ClientsFactory;
 use StrictPhp\HttpClients\Factories\ConfigManagerFactory;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
@@ -68,9 +68,7 @@ final class HttpClientsServiceProvider extends ServiceProvider
                 $cache = $application->make(self::ServiceCache);
                 assert($cache instanceof CacheInterface);
                 $serializableResponse = $application->make(SerializableResponseService::class);
-                assert($serializableResponse instanceof SerializableResponseService);
                 $configManager = $application->make(ConfigManager::class);
-                assert($configManager instanceof ConfigManager);
 
                 return new CacheResponseClientFactory($cache, $serializableResponse, $configManager);
             },
@@ -98,7 +96,7 @@ final class HttpClientsServiceProvider extends ServiceProvider
             } elseif (class_exists(Psr18Client::class)) {
                 return new Psr18Client();
             }
-            throw new InvalidStateException(
+            throw new LogicException(
                 sprintf('Register http client like service name %s.', self::ServiceMainClient),
             );
         });
@@ -116,7 +114,6 @@ final class HttpClientsServiceProvider extends ServiceProvider
 
         $this->app->singletonIf(ConfigManager::class, static function (Application $application): ConfigManager {
             $configManagerFactory = $application->make(ConfigManagerFactory::class);
-            assert($configManagerFactory instanceof ConfigManagerFactory);
 
             return $configManagerFactory->create(self::myConfig($application, self::KeyConfig, []));
         });
@@ -139,10 +136,8 @@ final class HttpClientsServiceProvider extends ServiceProvider
             self::ServiceCache,
             static function (Application $application): CacheInterface {
                 $fileFactory = $application->make(FileFactoryContract::class);
-                assert($fileFactory instanceof FileFactoryContract);
 
                 $cacheKeyToFileInfoTransformer = $application->make(CacheKeyToFileInfoTransformer::class);
-                assert($cacheKeyToFileInfoTransformer instanceof CacheKeyToFileInfoTransformer);
 
                 return new CachePsr16Service($fileFactory, $cacheKeyToFileInfoTransformer);
             },
