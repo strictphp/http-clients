@@ -2,7 +2,7 @@
 
 namespace StrictPhp\HttpClients\Helpers;
 
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 
 final class Host
 {
@@ -23,7 +23,7 @@ final class Host
 
         $levels = explode('.', $host);
         if (count($levels) < 2) {
-            throw new InvalidStateException(sprintf('Minimum levels for domain is 2. Not allowed: %s', $host));
+            throw new LogicException(sprintf('Minimum levels for domain is 2. Not allowed: %s', $host));
         }
 
         return self::$hosts[$host] = '*.' . implode('.', array_slice($levels, -2));

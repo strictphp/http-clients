@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Clients\Sleep;
 
 use StrictPhp\HttpClients\Entities\AbstractConfig;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 
 final class SleepConfig extends AbstractConfig
 {
@@ -17,7 +17,7 @@ final class SleepConfig extends AbstractConfig
         public readonly bool $enabled = true,
     ) {
         if ($this->from >= $this->to) {
-            throw new InvalidStateException('Parameter $from is higher than $to.');
+            throw new LogicException('Parameter $from is higher than $to.');
         }
     }
 }

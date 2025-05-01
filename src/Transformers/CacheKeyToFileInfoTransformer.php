@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Transformers;
 
 use StrictPhp\HttpClients\Entities\FileInfoEntity;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 
 final class CacheKeyToFileInfoTransformer
 {
@@ -15,7 +15,7 @@ final class CacheKeyToFileInfoTransformer
     public function transform(string $key, string $extension): FileInfoEntity
     {
         if (strlen($key) < 2) {
-            throw new InvalidStateException('Cache key must be at least 2 characters long.');
+            throw new LogicException('Cache key must be at least 2 characters long.');
         }
 
         preg_match('~^(?<path>.+/)(?<filename>.+)$~', $key, $path);

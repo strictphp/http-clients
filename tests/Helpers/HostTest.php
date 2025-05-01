@@ -8,7 +8,7 @@ use Closure;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Helpers\Host;
 
 final class HostTest extends TestCase
@@ -20,10 +20,7 @@ final class HostTest extends TestCase
     {
         return [
             '1LD' => [static function (self $self) {
-                $self->assert(
-                    new InvalidStateException('Minimum levels for domain is 2. Not allowed: com'),
-                    'com',
-                );
+                $self->assert(new LogicException('Minimum levels for domain is 2. Not allowed: com'), 'com');
             }],
             '2LD' => [static function (self $self) {
                 $self->assert('*.strictphp.com', 'strictphp.com');
@@ -49,8 +46,8 @@ final class HostTest extends TestCase
     /**
      * @param non-empty-string $host
      */
-    public function assert(string|InvalidStateException $expected, string $host): void {
-        if ($expected instanceof InvalidStateException) {
+    public function assert(string|LogicException $expected, string $host): void {
+        if ($expected instanceof LogicException) {
             $this->expectExceptionObject($expected);
         }
 

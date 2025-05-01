@@ -7,7 +7,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 
 final class CacheKeyToFileInfoTransformerTest extends TestCase
@@ -29,11 +29,7 @@ final class CacheKeyToFileInfoTransformerTest extends TestCase
                 }],
             [
                 static function (self $self) {
-                    $self->assert(
-                        new InvalidStateException('Cache key must be at least 2 characters long.'),
-                        '1',
-                        'tmp',
-                    );
+                    $self->assert(new LogicException('Cache key must be at least 2 characters long.'), '1', 'tmp');
                 },
             ],
         ];

@@ -6,7 +6,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Clients\Sleep\SleepClient;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use Throwable;
 
@@ -37,6 +37,6 @@ final class RetryClient implements ClientInterface
             }
         }
 
-        throw new InvalidStateException('Number of tries invalid.');
+        throw new LogicException('Number of tries invalid.');
     }
 }

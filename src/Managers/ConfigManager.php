@@ -3,7 +3,7 @@
 namespace StrictPhp\HttpClients\Managers;
 
 use StrictPhp\HttpClients\Contracts\ConfigInterface;
-use StrictPhp\HttpClients\Exceptions\InvalidStateException;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Helpers\Host;
 
 final class ConfigManager
@@ -46,7 +46,7 @@ final class ConfigManager
             }
         } else {
             if ($this->defaultExists($configs::class)) {
-                throw new InvalidStateException(sprintf('Default config for "%s" already exists.', $configs::class));
+                throw new LogicException(sprintf('Default config for "%s" already exists.', $configs::class));
             }
             $this->forceDefault($configs);
         }
