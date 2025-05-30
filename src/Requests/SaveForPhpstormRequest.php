@@ -17,17 +17,17 @@ use StrictPhp\HttpClients\Responses\SaveResponse;
  * @see FailedRequestEvent
  * @see SuccessRequestEvent
  */
-final class SaveForPhpstormRequest
+final readonly class SaveForPhpstormRequest
 {
     /**
      * @param positive-int|null $bufferSize
      */
     public function __construct(
-        private readonly FileFactoryContract $fileFactory,
-        private readonly MakePathActionContract $makePathAction,
-        private readonly SaveResponse $saveResponse,
-        private readonly StreamActionContract $streamAction,
-        private readonly ?int $bufferSize = null,
+        private FileFactoryContract $fileFactory,
+        private MakePathActionContract $makePathAction,
+        private SaveResponse $saveResponse,
+        private StreamActionContract $streamAction,
+        private ?int $bufferSize = null,
     ) {
     }
 

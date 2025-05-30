@@ -14,12 +14,12 @@ use StrictPhp\HttpClients\Clients\Event\Exceptions\SuccessRequestEventExceptionI
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use Throwable;
 
-final class EventClient implements ClientInterface
+final readonly class EventClient implements ClientInterface
 {
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly ConfigManager $configManager,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ClientInterface $client,
+        private ConfigManager $configManager,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

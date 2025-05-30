@@ -6,10 +6,10 @@ use Exception;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use StrictPhp\HttpClients\Helpers\Filesystem as HelpersFilesystem;
 
-final class FilesystemService implements Filesystem
+final readonly class FilesystemService implements Filesystem
 {
     public function __construct(
-        private readonly string $dir,
+        private string $dir,
     ) {
     }
 

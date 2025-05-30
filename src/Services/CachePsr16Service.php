@@ -10,11 +10,11 @@ use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 use StrictPhp\HttpClients\Helpers\Time;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 
-final class CachePsr16Service implements CacheInterface
+final readonly class CachePsr16Service implements CacheInterface
 {
     public function __construct(
-        private readonly FileFactoryContract $fileFactory,
-        private readonly CacheKeyToFileInfoTransformer $cacheKeyToFileInfoTransformer,
+        private FileFactoryContract $fileFactory,
+        private CacheKeyToFileInfoTransformer $cacheKeyToFileInfoTransformer,
     ) {
     }
 

@@ -14,11 +14,11 @@ use Stringable;
  * @phpstan-type SerializeType array{class: class-string<ResponseInterface>, protocolVersion: string,
  *     headers: array<string>|array<string, array<string>>, code: int, reason: string, body: string, file: string}
  */
-final class SerializableResponse implements Serializable, Stringable
+final readonly class SerializableResponse implements Serializable, Stringable
 {
     public function __construct(
-        public readonly ResponseInterface $response,
-        public readonly string $extension = '',
+        public ResponseInterface $response,
+        public string $extension = '',
     ) {
     }
 

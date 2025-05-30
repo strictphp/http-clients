@@ -7,11 +7,11 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 
-final class StoreClientFactory implements ClientFactoryContract
+final readonly class StoreClientFactory implements ClientFactoryContract
 {
     public function __construct(
-        private readonly SaveForPhpstormRequest $saveForPhpstormRequest,
-        private readonly ConfigManager $configManager,
+        private SaveForPhpstormRequest $saveForPhpstormRequest,
+        private ConfigManager $configManager,
     ) {
     }
 

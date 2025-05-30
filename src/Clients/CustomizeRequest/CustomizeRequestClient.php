@@ -7,11 +7,11 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
-final class CustomizeRequestClient implements ClientInterface
+final readonly class CustomizeRequestClient implements ClientInterface
 {
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly ConfigManager $configManager,
+        private ClientInterface $client,
+        private ConfigManager $configManager,
     ) {
     }
 

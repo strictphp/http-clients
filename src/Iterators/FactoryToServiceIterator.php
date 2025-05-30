@@ -10,14 +10,14 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 /**
  * @implements IteratorAggregate<int, ClientFactoryContract>
  */
-final class FactoryToServiceIterator implements IteratorAggregate
+final readonly class FactoryToServiceIterator implements IteratorAggregate
 {
     /**
      * @param ReverseIterator<int, class-string<ClientFactoryContract>> $factories
      */
     public function __construct(
-        private readonly ContainerInterface $container,
-        private readonly ReverseIterator $factories,
+        private ContainerInterface $container,
+        private ReverseIterator $factories,
     ) {
     }
 

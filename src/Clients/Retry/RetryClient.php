@@ -14,11 +14,11 @@ use Throwable;
  * Recommended to use before SleepClient
  * @see SleepClient
  */
-final class RetryClient implements ClientInterface
+final readonly class RetryClient implements ClientInterface
 {
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly ConfigManager $configManager,
+        private ClientInterface $client,
+        private ConfigManager $configManager,
     ) {
     }
 

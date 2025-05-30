@@ -8,12 +8,12 @@ use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Services\SerializableResponseService;
 
-final class CacheResponseClientFactory implements ClientFactoryContract
+final readonly class CacheResponseClientFactory implements ClientFactoryContract
 {
     public function __construct(
-        private readonly CacheInterface $cache,
-        private readonly SerializableResponseService $serializableResponseService,
-        private readonly ConfigManager $configManager,
+        private CacheInterface $cache,
+        private SerializableResponseService $serializableResponseService,
+        private ConfigManager $configManager,
     ) {
     }
 

@@ -5,10 +5,10 @@ namespace StrictPhp\HttpClients\Transformers;
 use StrictPhp\HttpClients\Entities\FileInfoEntity;
 use StrictPhp\HttpClients\Exceptions\LogicException;
 
-final class CacheKeyToFileInfoTransformer
+final readonly class CacheKeyToFileInfoTransformer
 {
     public function __construct(
-        private readonly string $tempDir = '',
+        private string $tempDir = '',
     ) {
     }
 

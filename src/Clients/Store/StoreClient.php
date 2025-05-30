@@ -13,12 +13,12 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use Throwable;
 
-final class StoreClient implements ClientInterface
+final readonly class StoreClient implements ClientInterface
 {
     public function __construct(
-        private readonly SaveForPhpstormRequest $saveForPhpstormRequest,
-        private readonly ConfigManager $configManager,
-        private readonly ClientInterface $client,
+        private SaveForPhpstormRequest $saveForPhpstormRequest,
+        private ConfigManager $configManager,
+        private ClientInterface $client,
     ) {
     }
 

@@ -7,14 +7,14 @@ use StrictPhp\HttpClients\Clients\MainHttp\MainHttpClient;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Contracts\ClientsFactoryContract;
 
-final class ClientsFactory implements ClientsFactoryContract
+final readonly class ClientsFactory implements ClientsFactoryContract
 {
     /**
      * @param iterable<ClientFactoryContract> $factories
      */
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly iterable $factories = [],
+        private ClientInterface $client,
+        private iterable $factories = [],
     ) {
     }
 

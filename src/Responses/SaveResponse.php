@@ -16,17 +16,17 @@ use StrictPhp\HttpClients\Helpers\Headers;
  * Use for event
  * @see SuccessRequestEvent
  */
-final class SaveResponse
+final readonly class SaveResponse
 {
     /**
      * @param positive-int|null $bufferSize
      */
     public function __construct(
-        private readonly FileFactoryContract $fileFactory,
-        private readonly MakePathActionContract $makePathAction,
-        private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
-        private readonly StreamActionContract $streamAction,
-        private readonly ?int $bufferSize = null,
+        private FileFactoryContract $fileFactory,
+        private MakePathActionContract $makePathAction,
+        private FindExtensionFromHeadersActionContract $findExtensionFromHeaders,
+        private StreamActionContract $streamAction,
+        private ?int $bufferSize = null,
     ) {
     }
 

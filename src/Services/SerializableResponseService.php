@@ -9,16 +9,16 @@ use StrictPhp\HttpClients\Helpers\Byte;
 use StrictPhp\HttpClients\Responses\SerializableResponse;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 
-final class SerializableResponseService
+final readonly class SerializableResponseService
 {
     /**
      * @param int $limitByte - 0 = disable behavior
      */
     public function __construct(
-        private readonly CacheKeyToFileInfoTransformer $cacheKeyToFileInfoTransformer,
-        private readonly FileFactoryContract $fileFactory,
-        private readonly FindExtensionFromHeadersActionContract $findExtensionFromHeadersAction,
-        private readonly int $limitByte = Byte::Mega * 30,
+        private CacheKeyToFileInfoTransformer $cacheKeyToFileInfoTransformer,
+        private FileFactoryContract $fileFactory,
+        private FindExtensionFromHeadersActionContract $findExtensionFromHeadersAction,
+        private int $limitByte = Byte::Mega * 30,
     ) {
     }
 

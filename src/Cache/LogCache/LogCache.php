@@ -7,12 +7,12 @@ use Generator;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 
-final class LogCache implements CacheInterface
+final readonly class LogCache implements CacheInterface
 {
     public function __construct(
-        private readonly CacheInterface $cache,
-        private readonly LoggerInterface $logger,
-        private readonly bool $showData = false,
+        private CacheInterface $cache,
+        private LoggerInterface $logger,
+        private bool $showData = false,
     ) {
     }
 

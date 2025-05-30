@@ -7,10 +7,10 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use StrictPhp\HttpClients\Helpers\Stream;
 
-final class MainHttpClient implements ClientInterface
+final readonly class MainHttpClient implements ClientInterface
 {
     public function __construct(
-        private readonly ClientInterface $client,
+        private ClientInterface $client,
     )
     {
     }

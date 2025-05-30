@@ -6,10 +6,10 @@ use Psr\Http\Message\StreamInterface;
 use StrictPhp\HttpClients\Contracts\StreamActionContract;
 use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 
-final class StreamAction implements StreamActionContract
+final readonly class StreamAction implements StreamActionContract
 {
     public function __construct(
-        private readonly int $buffer = 8192,
+        private int $buffer = 8192,
     )
     {
     }

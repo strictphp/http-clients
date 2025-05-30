@@ -16,18 +16,18 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 /**
  * @phpstan-type config array<class-string<ConfigInterface>, array<string, mixed>|null>|array<ConfigInterface>
  */
-final class ConfigManagerFactory
+final readonly class ConfigManagerFactory
 {
     /**
      * @var array<string, class-string<ConfigInterface>>
      */
-    private readonly array $configAliases;
+    private array $configAliases;
 
     /**
      * @param array<string, class-string<ConfigInterface>> $configAliases
      */
     public function __construct(
-        private readonly string $keyDefault = 'default',
+        private string $keyDefault = 'default',
         array $configAliases = [],
     ) {
         $this->configAliases = $configAliases + [

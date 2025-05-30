@@ -6,10 +6,10 @@ use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
-final class CustomizeRequestClientFactory implements ClientFactoryContract
+final readonly class CustomizeRequestClientFactory implements ClientFactoryContract
 {
     public function __construct(
-        private readonly ConfigManager $configManager,
+        private ConfigManager $configManager,
     ) {
     }
 

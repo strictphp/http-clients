@@ -7,11 +7,11 @@ use Psr\Http\Client\ClientInterface;
 use StrictPhp\HttpClients\Contracts\ClientFactoryContract;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 
-final class EventClientFactory implements ClientFactoryContract
+final readonly class EventClientFactory implements ClientFactoryContract
 {
     public function __construct(
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly ConfigManager $configManager,
+        private EventDispatcherInterface $eventDispatcher,
+        private ConfigManager $configManager,
     ) {
     }
 

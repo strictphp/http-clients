@@ -8,10 +8,10 @@ use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 use StrictPhp\HttpClients\Filesystem\Wrappers\File;
 
-final class FileFactory implements FileFactoryContract
+final readonly class FileFactory implements FileFactoryContract
 {
     public function __construct(
-        private readonly Filesystem $filesystem,
+        private Filesystem $filesystem,
     ) {
     }
 

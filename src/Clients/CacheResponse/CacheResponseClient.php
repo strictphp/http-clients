@@ -9,13 +9,13 @@ use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Services\SerializableResponseService;
 
-final class CacheResponseClient implements ClientInterface
+final readonly class CacheResponseClient implements ClientInterface
 {
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly CacheInterface $cache,
-        private readonly SerializableResponseService $serializableResponseService,
-        private readonly ConfigManager $configManager,
+        private ClientInterface $client,
+        private CacheInterface $cache,
+        private SerializableResponseService $serializableResponseService,
+        private ConfigManager $configManager,
     ) {
     }
 
