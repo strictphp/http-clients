@@ -53,7 +53,7 @@ final readonly class SaveResponse
 
     public function serialized(AbstractCompleteRequestEvent $event, ResponseInterface $response): void
     {
-        $file = $this->createFile($event, $response, 'shttp');
+        $file = $this->createFile($event, $response, SerializableResponse::FileExtension);
 
         $file->write(serialize((new SerializableResponse($response))));
     }

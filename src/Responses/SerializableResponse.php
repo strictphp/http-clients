@@ -16,6 +16,8 @@ use Stringable;
  */
 final readonly class SerializableResponse implements Serializable, Stringable
 {
+    public const FileExtension = 'shttp';
+
     public function __construct(
         public ResponseInterface $response,
         public string $extension = '',

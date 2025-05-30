@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Filesystem\Contracts\FileFactoryContract;
 use StrictPhp\HttpClients\Filesystem\Interfaces\FileInterface;
 use StrictPhp\HttpClients\Helpers\Time;
+use StrictPhp\HttpClients\Responses\SerializableResponse;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 
 final readonly class CachePsr16Service implements CacheInterface
@@ -73,7 +74,7 @@ final readonly class CachePsr16Service implements CacheInterface
 
     private function createFileInfoEntity(string $key): FileInterface
     {
-        $fileInfo = $this->cacheKeyToFileInfoTransformer->transform($key, 'shttp');
+        $fileInfo = $this->cacheKeyToFileInfoTransformer->transform($key, SerializableResponse::FileExtension);
 
         return $this->fileFactory->create($fileInfo);
     }

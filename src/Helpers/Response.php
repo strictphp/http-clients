@@ -6,21 +6,36 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
+use StrictPhp\HttpClients\Exceptions\LogicException;
 use StrictPhp\HttpClients\Responses\SerializableResponse;
 use StrictPhp\HttpClients\Services\LoadCustomFileService;
 
+/**
+ * @phpstan-type callbackResponseType (callable(RequestInterface): ResponseInterface)
+ * @phpstan-type inputType string|ResponseInterface|callbackResponseType
+ */
 final class Response
 {
+    private const FileExtension = '.' . SerializableResponse::FileExtension;
+
     /**
-     * @param string|ResponseInterface|(callable(RequestInterface): ResponseInterface) $content
+     * @param inputType $content
      */
     public static function fromContent($content, RequestInterface $request): ResponseInterface
     {
         if (is_callable($content)) {
-            /** @var callable(RequestInterface): ResponseInterface $content */
+            /** @var callbackResponseType $content */
             return ($content)($request);
-        } elseif (is_string($content) && is_file($content)) { // *.shttp
-            $body = self::restore(new LoadCustomFileService(), $content);
+        } elseif (is_string($content) && is_file($content)) {
+            if (str_ends_with($content, self::FileExtension)) {
+                $body = self::restore(new LoadCustomFileService(), $content);
+            } else {
+                $body = file_get_contents($content);
+                if ($body === false) {
+                    throw new LogicException('Failed to read file: ' . $content);
+                }
+                $body = rtrim($body);
+            }
         } else {
             $body = $content;
         }

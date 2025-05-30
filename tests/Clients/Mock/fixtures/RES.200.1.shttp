@@ -1,0 +1,1 @@
+O:52:"StrictPhp\HttpClients\Responses\SerializableResponse":7:{s:5:"class";s:24:"GuzzleHttp\Psr7\Response";s:15:"protocolVersion";s:3:"1.1";s:7:"headers";a:0:{}s:4:"code";i:200;s:6:"reason";s:2:"OK";s:4:"body";s:4:"done";s:4:"file";s:0:"";}
