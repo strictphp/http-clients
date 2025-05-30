@@ -12,7 +12,7 @@ final class LoadCustomFileService implements CacheInterface
     {
         if (is_file($key)) {
             $content = file_get_contents($key);
-            return $content === false ? $default : $content;
+            return $content === false ? $default : @unserialize($content);
         }
 
         return $default;
