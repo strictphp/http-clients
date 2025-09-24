@@ -9,8 +9,10 @@ use StrictPhp\HttpClients\Entities\AbstractConfig;
 
 final class CacheResponseConfig extends AbstractConfig
 {
+    public const TtlEndOfDay = 'endOfDay';
+
     public function __construct(
-        public int $ttl = 0,
+        public int|string $ttl = 0,
         public bool $saveOnly = false,
         public bool $enabled = true,
         public ?int $limitByte = null,

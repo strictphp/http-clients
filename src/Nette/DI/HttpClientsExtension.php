@@ -30,6 +30,7 @@ use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use StrictPhp\HttpClients\Services\RelativeDateToTtlService;
 use StrictPhp\HttpClients\Services\SerializableResponseService;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
 use Symfony\Component\HttpClient\Psr18Client;
@@ -175,6 +176,10 @@ class HttpClientsExtension extends CompilerExtension
         $this->getContainerBuilder()
             ->addDefinition($this->prefix('file.info.transformer'))
             ->setCreator(CacheKeyToFileInfoTransformer::class);
+
+        $this->getContainerBuilder()
+            ->addDefinition($this->prefix('relative.date.to.ttl.service'))
+            ->setCreator(RelativeDateToTtlService::class);
 
         $this->getContainerBuilder()
             ->addDefinition($this->prefix('serializable.response.service'))

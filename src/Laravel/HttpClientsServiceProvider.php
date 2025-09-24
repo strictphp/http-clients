@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Psr\Clock\ClockInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 use StrictPhp\HttpClients\Actions\FindExtensionFromHeadersAction;
@@ -35,8 +36,10 @@ use StrictPhp\HttpClients\Managers\ConfigManager;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\CachePsr16Service;
 use StrictPhp\HttpClients\Services\FilesystemService;
+use StrictPhp\HttpClients\Services\RelativeDateToTtlService;
 use StrictPhp\HttpClients\Services\SerializableResponseService;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpClientsServiceProvider extends ServiceProvider
@@ -61,6 +64,7 @@ final class HttpClientsServiceProvider extends ServiceProvider
         $this->app->singletonIf(MakePathActionContract::class, MakePathAction::class);
         $this->app->singletonIf(SaveResponse::class, SaveResponse::class);
         $this->app->singletonIf(StreamActionContract::class, StreamAction::class);
+        $this->app->singletonIf(ClockInterface::class, static fn (): ClockInterface => new Clock());
         // factories
         $this->app->singletonIf(
             CacheResponseClientFactory::class,
@@ -69,10 +73,17 @@ final class HttpClientsServiceProvider extends ServiceProvider
                 assert($cache instanceof CacheInterface);
                 $serializableResponse = $application->make(SerializableResponseService::class);
                 $configManager = $application->make(ConfigManager::class);
+                $relativeDateToTtlService = $application->make(RelativeDateToTtlService::class);
 
-                return new CacheResponseClientFactory($cache, $serializableResponse, $configManager);
+                return new CacheResponseClientFactory(
+                    $cache,
+                    $serializableResponse,
+                    $configManager,
+                    $relativeDateToTtlService,
+                );
             },
         );
+        $this->app->singletonIf(RelativeDateToTtlService::class);
         $this->app->singletonIf(CustomizeRequestClientFactory::class);
         $this->app->singletonIf(CustomResponseClientFactory::class);
         $this->app->singletonIf(EventClientFactory::class);

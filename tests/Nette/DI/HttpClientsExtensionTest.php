@@ -27,6 +27,7 @@ use StrictPhp\HttpClients\Requests\SaveForPhpstormRequest;
 use StrictPhp\HttpClients\Responses\SaveResponse;
 use StrictPhp\HttpClients\Services\SerializableResponseService;
 use StrictPhp\HttpClients\Transformers\CacheKeyToFileInfoTransformer;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class HttpClientsExtensionTest extends TestCase
@@ -123,6 +124,7 @@ final class HttpClientsExtensionTest extends TestCase
             $compiler->addExtension('psrHttp', new HttpClientsExtension($tempDir, $logDir));
 
             $config['psrHttp.factory'] = HttpFactory::class;
+            $config['psrClock'] = Clock::class;
             $compiler->addConfig([
                 'services' => $config,
             ]);

@@ -19,7 +19,7 @@ final class Headers
         $suffix = str_repeat('.', $replace);
         foreach ($headers as $name => $values) {
             $value = implode(', ', $values);
-            if (str_contains(strtolower($name), 'bearer')) {
+            if (str_contains(strtolower((string) $name), 'bearer')) {
                 $value = substr($value, 0, -1 * $replace) . $suffix;
             }
 

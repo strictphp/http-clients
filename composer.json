@@ -30,7 +30,8 @@
     "psr/http-client": "^1.0",
     "psr/http-message": "^1.0 || ^2.0",
     "psr/log": "^3.0",
-    "psr/simple-cache": "^3.0"
+    "psr/simple-cache": "^3.0",
+    "symfony/clock": "^7.3"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "^7.5",

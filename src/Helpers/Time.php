@@ -4,6 +4,7 @@ namespace StrictPhp\HttpClients\Helpers;
 
 use DateInterval;
 use DateTimeImmutable;
+use Nette\Utils\Strings;
 
 final class Time
 {
@@ -31,6 +32,11 @@ final class Time
         }
 
         return $ttl;
+    }
+
+    public static function matchTime(string $time): bool
+    {
+        return Strings::match($time, '~^\d{1,2}:\d{2}(:\d{2})?$~') !== null;
     }
 
     private static function dateIntervalToSeconds(DateInterval $dateInterval): int

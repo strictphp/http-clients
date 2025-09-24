@@ -14,7 +14,7 @@ final class CacheKeyMakerAction implements CacheKeyMakerActionContract
         $uri = $request->getUri();
 
         foreach (array_keys($headers) as $name) {
-            if (str_starts_with(strtolower($name), 'x-')) {
+            if (str_starts_with(strtolower((string) $name), 'x-')) {
                 unset($headers[$name]);
             }
         }
