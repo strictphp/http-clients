@@ -26,7 +26,8 @@ final class Response
         if (is_callable($content)) {
             /** @var callbackResponseType $content */
             return ($content)($request);
-        } elseif (is_string($content) && is_file($content)) {
+        }
+        if (is_string($content) && is_file($content)) {
             if (str_ends_with($content, self::FileExtension)) {
                 $body = self::restore(new LoadCustomFileService(), $content);
             } else {
@@ -51,7 +52,8 @@ final class Response
 
         if ($response === null) {
             return null;
-        } elseif ($response instanceof SerializableResponse) {
+        }
+        if ($response instanceof SerializableResponse) {
             return $response->response;
         }
 

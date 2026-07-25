@@ -89,7 +89,8 @@ final readonly class ConfigManagerFactory
         foreach ($config as $configClass => $parameters) {
             if ($parameters === null) {
                 continue;
-            } elseif ($parameters instanceof ConfigInterface) {
+            }
+            if ($parameters instanceof ConfigInterface) {
                 $objectConfig = $parameters;
             } else {
                 /** @var class-string<ConfigInterface> $class */

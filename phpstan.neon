@@ -5,6 +5,8 @@ parameters:
 		- tests
 		- ecs.php
 		- rector.php
+	excludePaths:
+		- tests/temp
 
 	exceptions:
 		check:

@@ -35,7 +35,8 @@ final class File implements FileInterface
     {
         if ($this->isFile() === false) {
             return null;
-        } elseif ($this->isTllExpired()) {
+        }
+        if ($this->isTllExpired()) {
             $this->remove();
             return null;
         }
