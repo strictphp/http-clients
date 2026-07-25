@@ -104,7 +104,8 @@ final class HttpClientsServiceProvider extends ServiceProvider
         $this->app->singletonIf(self::ServiceMainClient, static function (Application $application): ClientInterface {
             if (class_exists(Client::class)) {
                 return new Client();
-            } elseif (class_exists(Psr18Client::class)) {
+            }
+            if (class_exists(Psr18Client::class)) {
                 return new Psr18Client();
             }
             throw new LogicException(

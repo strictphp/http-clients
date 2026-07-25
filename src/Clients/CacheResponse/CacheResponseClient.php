@@ -66,7 +66,8 @@ final readonly class CacheResponseClient implements ClientInterface
 
         if ($ttl === CacheResponseConfig::TtlEndOfDay) {
             return $this->relativeDateToTtlService->midnight();
-        } elseif (Time::matchTime($ttl)) {
+        }
+        if (Time::matchTime($ttl)) {
             return $this->relativeDateToTtlService->time($ttl);
         }
 

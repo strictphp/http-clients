@@ -8,5 +8,6 @@ return ECSConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
+    ->withSkip([__DIR__ . '/tests/temp'])
     // This is required to include the StrictPHP Conventions
     ->withSets([StrictPhp\Conventions\ExtensionFiles::Ecs]);
