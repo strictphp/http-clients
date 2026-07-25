@@ -120,7 +120,7 @@ final class HttpClientsExtensionTest extends TestCase
         $tempDir = $rootTempDir . '/tmp';
 
         $loader = new ContainerLoader($rootTempDir, true);
-        $class = $loader->load(function (Compiler $compiler) use ($config, $tempDir, $logDir): void {
+        $class = $loader->load(function (Compiler $compiler) use ($config, $tempDir, $logDir): ?string {
             $compiler->addExtension('psrHttp', new HttpClientsExtension($tempDir, $logDir));
 
             $config['psrHttp.factory'] = HttpFactory::class;
@@ -128,11 +128,10 @@ final class HttpClientsExtensionTest extends TestCase
             $compiler->addConfig([
                 'services' => $config,
             ]);
+
+            return null;
         }, md5(strval(microtime(true))));
 
-        $container = new $class();
-        assert($container instanceof Container);
-
-        return $container;
+        return new $class();
     }
 }
