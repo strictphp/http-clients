@@ -22,7 +22,7 @@ final readonly class FactoryToServiceIterator implements IteratorAggregate
     }
 
     /**
-     * @return Generator<ClientFactoryContract>
+     * @return Generator<int, ClientFactoryContract>
      */
     public function getIterator(): Generator
     {
