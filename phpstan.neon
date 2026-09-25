@@ -6,7 +6,7 @@ parameters:
 		- ecs.php
 		- rector.php
 	excludePaths:
-		- tests/temp
+		- tests/temp (?)
 
 	exceptions:
 		check:
