@@ -22,9 +22,7 @@ final class CacheResponseConfig extends AbstractConfig
 
     public function initFromDefaultConfig(ConfigInterface $object): void
     {
-        if ($this->cacheKeyMakerAction === null) {
-            $this->cacheKeyMakerAction = $object->getCacheKeyMakerAction();
-        }
+        $this->cacheKeyMakerAction ??= $object->getCacheKeyMakerAction();
     }
 
     public function getCacheKeyMakerAction(): CacheKeyMakerActionContract
