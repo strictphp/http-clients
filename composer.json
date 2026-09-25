@@ -47,12 +47,15 @@
   },
   "scripts": {
     "analyse": "./vendor/bin/phpstan",
+    "cbf": "vendor/bin/ecs --fix",
     "check": [
       "rm -rf tests/temp/*",
       "@lint",
       "@analyse",
       "@test"
     ],
+    "coverage": "vendor/bin/phpunit --coverage-text",
+    "cs": "vendor/bin/ecs",
     "lint": [
       "@lint:fix",
       "@lint:upgrade"
@@ -62,11 +65,21 @@
     "lint:stan": "./vendor/bin/phpstan",
     "lint:upgrade": "vendor/bin/rector process",
     "lint:upgrade:check": "vendor/bin/rector process --dry-run",
+    "qa": [
+      "@tests",
+      "@cs",
+      "@stan"
+    ],
+    "stan": "vendor/bin/phpstan analyse",
     "test": [
       "rm -rf tests/temp/*",
       "./vendor/bin/phpunit"
     ],
-    "test:coverage": "./vendor/bin/phpunit --coverage-text"
+    "test:coverage": "./vendor/bin/phpunit --coverage-text",
+    "tests": [
+      "rm -rf tests/temp/*",
+      "vendor/bin/phpunit"
+    ]
   },
   "autoload": {
     "psr-4": {

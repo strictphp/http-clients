@@ -9,5 +9,6 @@ return ECSConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withSkip([__DIR__ . '/tests/temp'])
+    ->withCache(__DIR__ . '/var/ecs')
     // This is required to include the StrictPHP Conventions
     ->withSets([StrictPhp\Conventions\ExtensionFiles::Ecs]);

@@ -4,3 +4,4 @@ composer.lock
 /tests/**/output/
 /tests/temp/
 coverage.html
+/var/
