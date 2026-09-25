@@ -7,28 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['8.3', '8.4', '8.5']
+        php: ['8.2', '8.3', '8.4', '8.5']
+
       fail-fast: false
 
     name: PHP ${{ matrix.php }} tests
-    steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-
-      - run: composer install --no-progress --prefer-dist
-      - run: composer test
-
-  lowest_dependencies:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php: ['8.2', '8.3', '8.4', '8.5']
-      fail-fast: false
-
-    name: PHP ${{ matrix.php }} lowest Dependencies test
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -40,5 +23,39 @@ jobs:
       - if: matrix.php == '8.2'
         run: composer remove --dev strictphp/conventions --no-update
 
+      - run: composer install --no-progress --prefer-dist
+      - run: composer tests
+
+  lowest_dependencies:
+    name: Lowest Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          coverage: none
+
+      # strictphp/conventions is a lint-only tool requiring PHP >= 8.3 and this job runs tests only
+      - run: composer remove --dev strictphp/conventions --no-update
       - run: composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable
-      - run: composer test
+      - run: composer tests
+
+  code_coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          coverage: pcov
+
+      # strictphp/conventions is a lint-only tool requiring PHP >= 8.3 and this job runs tests only
+      - run: composer remove --dev strictphp/conventions --no-update
+      - run: composer install --no-progress --prefer-dist
+      - run: vendor/bin/phpunit --coverage-clover coverage.xml
+      - run: wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.3/php-coveralls.phar
+      - env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: php php-coveralls.phar --verbose --config tests/.coveralls.yml

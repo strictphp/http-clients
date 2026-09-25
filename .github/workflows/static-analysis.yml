@@ -1,11 +1,24 @@
-name: Static Analysis (only informative)
+name: Static Analysis
 
 on:
   push:
-    branches:
-      - main
+  pull_request:
 
 jobs:
+  ecs:
+    name: Code Style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          # strictphp/conventions requires PHP >= 8.3
+          php-version: 8.3
+          coverage: none
+
+      - run: composer install --no-progress --prefer-dist
+      - run: composer cs
+
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
@@ -13,9 +26,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          # strictphp/conventions requires PHP >= 8.3
+          php-version: 8.3
           coverage: none
 
       - run: composer install --no-progress --prefer-dist
-      - run: composer lint:stan -- --no-progress
-        continue-on-error: true # is only informative
+      - run: composer stan -- --no-progress
